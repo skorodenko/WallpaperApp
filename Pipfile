@@ -10,6 +10,7 @@ pillow = "*"
 djangorestframework = "*"
 markdown = "*"
 django-filter = "*"
+django-rest-registration = "*"
 
 [dev-packages]
 black = "*"

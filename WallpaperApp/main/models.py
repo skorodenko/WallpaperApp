@@ -8,12 +8,14 @@ class Images(models.Model):
         - uuid
         - user_id: id of media uploader
         - image_path: path to underlying media
+        - upload_date: date when image was uploaded
     """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
     user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     user_id.db_column = "user_id"
     #TODO do something with this :) 
     image = models.ImageField(upload_to="wallpapers/")
+    upload_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return f"Image: {self.image.name}"
