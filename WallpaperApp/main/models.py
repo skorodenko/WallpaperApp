@@ -1,6 +1,6 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import User
+from authentication.models import Users
 
 
 class Images(models.Model):
@@ -10,8 +10,8 @@ class Images(models.Model):
         - image_path: path to underlying media
         - upload_date: date when image was uploaded
     """
-    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    user_id = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
     user_id.db_column = "user_id"
     #TODO do something with this :) 
     image = models.ImageField(upload_to="wallpapers/")

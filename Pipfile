@@ -8,9 +8,7 @@ django = "*"
 psycopg2-binary = "*"
 pillow = "*"
 djangorestframework = "*"
-markdown = "*"
-django-filter = "*"
-django-rest-registration = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 black = "*"
