@@ -20,7 +20,6 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password": "Password fields didn't match."})
-        
         return attrs
 
     def create(self, validated_data):
@@ -28,8 +27,32 @@ class RegisterSerializer(serializers.ModelSerializer):
             username=validated_data["username"],
             email=validated_data["email"],
         )
-        
         user.set_password(validated_data["password"])
         user.save()
+        return user
 
+
+class UserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(
+                validators=[UniqueValidator(queryset=Users.objects.all())]
+            )
+
+    password = serializers.CharField(write_only=True, validators=[validate_password])
+    password2 = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = Users
+        fields = ("id", "username", "password", "password2", "email")
+
+    def validate(self, attrs):
+        if attrs.get("password") != attrs.get("password2"):
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        return attrs
+    
+    def update(self, user, validated_data):
+        if validated_data.get("password"):
+            user.set_password(validated_data["password"])
+        if validated_data.get("email"):
+            user.email = validated_data["email"]
+        user.save()
         return user

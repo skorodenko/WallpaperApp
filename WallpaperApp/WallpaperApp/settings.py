@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "main",
     "authentication",
     "rest_framework",
-    "rest_framework_simplejwt",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -49,7 +48,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    #"django.middleware.csrf.CsrfViewMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -95,7 +94,7 @@ AUTH_USER_MODEL = "authentication.Users"
 
 # REST Framework settings
 REST_FRAMEWORK = {
-    "DEFAULT_AUTENTICATION_CLASSES": [
+    "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ],
     
@@ -106,8 +105,10 @@ REST_FRAMEWORK = {
 
 #JWT settings
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=360),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.SlidingToken",),
+
+    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=180),
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=7),
 }
 
 # Password validation
