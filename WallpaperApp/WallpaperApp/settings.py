@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     "main",
     "authentication",
     "rest_framework",
+    "guardian",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -88,6 +89,11 @@ DATABASES = {
         "PORT": "5432",
     }
 }
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend", 
+    "guardian.backends.ObjectPermissionBackend",
+]
 
 # Substitue default user with abstract user
 AUTH_USER_MODEL = "authentication.Users"

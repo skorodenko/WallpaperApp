@@ -1,57 +1,76 @@
+import os
 import uuid
+import hashlib
+from PIL import Image
 from django.db import models
 from authentication.models import Users
 
 
+def hash_upload(instance, filename):
+    """ 
+    Upon upload rename file according to its contents' sha512 hash.
+    """
+    im = Image.open(instance.image)
+    fname, ext = os.path.splitext(filename)
+    hashname = hashlib.sha512(im.tobytes()).hexdigest()
+    return f"{hashname}{ext}"
+
 class Images(models.Model):
     """ Images
         - uuid
-        - user_id: id of media uploader
         - image_path: path to underlying media
         - upload_date: date when image was uploaded
+        - stat: user related statistics for image 
     """
+    class Meta:
+        permissions = (
+            ("image_ownership", "Own image permission"),
+        )
+
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user_id = models.ForeignKey(Users, on_delete=models.SET_NULL, null=True)
-    user_id.db_column = "user_id"
-    #TODO do something with this :) 
-    image = models.ImageField(upload_to="wallpapers/")
+    image = models.ImageField(upload_to=hash_upload)
     upload_date = models.DateField(auto_now_add=True)
+    stat = models.ManyToManyField(Users, through="UserImStat")
 
     def __str__(self):
-        return f"Image: {self.image.name}"
+        return f"Image<{self.uuid}>: {self.image.name}"
 
 
-class ImStatistics(models.Model):
-    """ Statistics on particular image
+class UserImStat(models.Model):
+    """ User Image Statistics
+        - user_uuid
         - image_uuid
-        - upvotes: number of upvotes (likes)
-        - downvotes: number of downvotes (dislikes)
-        - views: number of media views
+        - vote
     """
-    image_uuid = models.ForeignKey(Images, on_delete=models.CASCADE)
-    image_uuid.db_column = "image_uuid"
-    upvotes = models.IntegerField(default=0)
-    downvotes = models.IntegerField(default=0)
-    views = models.PositiveIntegerField(default=0)
+    class Votes(models.IntegerChoices):
+        UPVOTE = 1
+        DOWNVOTE = -1
 
-    def __str__(self):
-        return f"Image<{self.image_uuid}>: up({self.upvotes}) \
-            down({self.downvotes}) views({self.views})"
+    user_uuid = models.ForeignKey(Users, on_delete=models.CASCADE)
+    image_uuid = models.ForeignKey(Images, on_delete=models.CASCADE)
+    vote = models.IntegerField(choices=Votes.choices)
 
 
 class ImProperties(models.Model):
     """ Image properties
         - image_uuid
-        - height
-        - width
         - tags
+        - tagged: True if image was tagged by users, False otherwise
     """
     image_uuid = models.ForeignKey(Images, on_delete=models.CASCADE)
     image_uuid.db_column = "image_uuid"
-    height = models.PositiveSmallIntegerField()
-    width = models.PositiveSmallIntegerField()
-    #TODO do something with this :) 
-    tags = models.JSONField()
+    tags = models.ManyToManyField("ImTags")
+    tagged = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Image<{self.image_uuid}>: {self.width}x{self.height}"
+        return f"ImageProperties<{self.image_uuid}>: is_tagged({self.tagged})"
+
+
+class ImTags(models.Model):
+    """ Image tags
+        - name: tag name
+    """
+    name = models.CharField(max_length=60)
+
+    def __str__(self):
+        return f"Tag<{self.id}>: {self.name}"
