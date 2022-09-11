@@ -6,5 +6,5 @@ urlpatterns = [
     path("register/", RegisterView.as_view(), name="auth_register"),
     path("login/", TokenObtainSlidingView.as_view(), name="auth_login"),
     path("login/refresh/", TokenRefreshSlidingView.as_view(), name="auth_refresh"),
-    path("user/<uuid>/", User.as_view(), name="auth_user"),
+    path("user/", User.as_view(), name="auth_user"),
 ]

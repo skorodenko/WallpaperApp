@@ -13,24 +13,18 @@ class RegisterView(generics.CreateAPIView):
 class User(views.APIView):
     permission_classes = [permissions.IsAuthenticated,]
 
-    def get_user(self, uuid):
-        try:
-            return Users.objects.get(id=uuid)
-        except Users.DoesNotExist:
-            raise http.Http404
-
-    def delete(self, request, uuid):
-        user = self.get_user(uuid)
+    def delete(self, request):
+        user = request.user
         user.delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT) 
 
-    def get(self, request, uuid):
-        user = self.get_user(uuid)
+    def get(self, request):
+        user = request.user
         serializer = UserSerializer(user)
         return response.Response(serializer.data)
 
-    def put(self, request, uuid):
-        user = self.get_user(uuid)
+    def put(self, request):
+        user = request.user
         serializer = UserSerializer(user, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
