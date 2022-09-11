@@ -71,7 +71,7 @@ class Image(views.APIView):
         return response.Response(serializer.data)
     
     def put(self, request, uuid):
-        # TAGME
+        #TODO TAGME
         ...
     
     def post(self, request, uuid):
