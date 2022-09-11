@@ -9,6 +9,7 @@ psycopg2-binary = "*"
 pillow = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
+django-guardian = "*"
 
 [dev-packages]
 black = "*"
