@@ -1,10 +1,10 @@
 from django import http
 from .models import Images
 from .serializers import ImageSerializer
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, get_perms
 from django.db.models import Sum
 from datetime import timedelta, datetime
-from rest_framework import views, response, status
+from rest_framework import views, response, status, permissions
 
 
 class ListImages(views.APIView):
@@ -31,7 +31,10 @@ class ListImages(views.APIView):
 
     def get(self, request):
         match request.query_params:
-            case {"sort": "new", **etc}:
+            case {
+                    "sort": "new", 
+                    **etc
+            }:
                 imgs = self.get_images()
                 imgs = imgs.order_by("upload_date")
                 serializer = ImageSerializer(imgs, many=True)
@@ -58,6 +61,7 @@ class ListImages(views.APIView):
 
 
 class Image(views.APIView):
+    permission_classes = [permissions.IsAuthenticated,]
 
     def get_image(self, uuid):
         try:
@@ -67,8 +71,10 @@ class Image(views.APIView):
 
     def get(self, request, uuid):
         img = self.get_image(uuid)
-        serializer = ImageSerializer(img)
-        return response.Response(serializer.data)
+        if "image_ownership" in get_perms(request.user, img):
+            serializer = ImageSerializer(img)
+            return response.Response(serializer.data)
+        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
     
     def put(self, request, uuid):
         #TODO TAGME
