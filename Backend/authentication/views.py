@@ -1,4 +1,3 @@
-from django import http
 from .models import Users
 from .serializers import RegisterSerializer, UserSerializer
 from rest_framework import generics, views, permissions, response, status
