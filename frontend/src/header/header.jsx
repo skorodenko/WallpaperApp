@@ -6,7 +6,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import ThemeSwitcher from "./themeswitcher";
+import ThemeSwitcher from "./themeSwitcher";
+import LayoutSelect from "../album/layoutSelect";
 import Divider from "@mui/material/Divider";
 
 export function WMenu() {
@@ -43,6 +44,8 @@ export function WMenu() {
         <MenuItem>
           <ThemeSwitcher />
         </MenuItem>
+        <Divider />
+        <LayoutSelect />
         <Divider />
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>

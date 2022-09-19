@@ -2,8 +2,8 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useTheme } from "@mui/material/styles";
-import { useDispatch } from 'react-redux';
-import { toggle } from "../header/themeSlice"
+import { useDispatch } from "react-redux";
+import { toggle } from "../header/themeSlice";
 import React from "react";
 
 export default function ThemeSwitcher() {
