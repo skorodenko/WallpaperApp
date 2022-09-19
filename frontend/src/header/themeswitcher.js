@@ -2,22 +2,19 @@ import { styled } from "@mui/material/styles";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useTheme } from "@mui/material/styles";
-import { ColorModeContext } from "../main/App";
+import { useDispatch } from 'react-redux';
+import { toggle } from "../header/themeSlice"
 import React from "react";
 
 export default function ThemeSwitcher() {
   const theme = useTheme();
-  const colorMode = React.useContext(ColorModeContext);
-
-  function handleChange() {
-    colorMode.toggleColorMode();
-  }
+  const dispatch = useDispatch();
 
   return (
     <FormControlLabel
       control={<MaterialUISwitch sx={{ m: 1 }} />}
       checked={theme.palette.mode === "dark" ? true : false}
-      onChange={handleChange}
+      onChange={() => dispatch(toggle())}
       label="Theme"
     />
   );
