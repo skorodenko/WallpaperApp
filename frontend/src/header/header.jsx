@@ -44,12 +44,15 @@ export function WMenu() {
         <MenuItem>
           <ThemeSwitcher />
         </MenuItem>
-        <Divider />
-        <LayoutSelect />
-        <Divider />
+        <Divider variant="middle" />
+        <MenuItem>
+          <LayoutSelect />
+        </MenuItem>
+        <Divider variant="middle" />
         <MenuItem onClick={handleClose}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        <Divider variant="middle" />
+        <MenuItem onClick={handleClose}>About</MenuItem>
       </Menu>
     </React.Fragment>
   );

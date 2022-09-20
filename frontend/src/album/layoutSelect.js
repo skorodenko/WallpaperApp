@@ -24,12 +24,10 @@ export default function LayoutSelect() {
   };
 
   return (
-    <div>
-      <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-controlled-open-select-label">Columns</InputLabel>
+    <React.Fragment>
+      <FormControl fullWidth>
+        <InputLabel>Columns</InputLabel>
         <Select
-          labelId="demo-controlled-open-select-label"
-          id="demo-controlled-open-select"
           open={open}
           onClose={handleClose}
           onOpen={handleOpen}
@@ -45,6 +43,6 @@ export default function LayoutSelect() {
           <MenuItem value={6}>Six</MenuItem>
         </Select>
       </FormControl>
-    </div>
+    </React.Fragment>
   );
 }
