@@ -1,6 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import themeReducer from "../header/themeSlice";
-import layoutSlice from "../album/layoutSlice";
+import themeReducer from "../slices/themeSlice";
+import layoutSlice from "../slices/layoutSlice";
 
 export default configureStore({
   reducer: {

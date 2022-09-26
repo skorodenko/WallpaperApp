@@ -4,7 +4,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import { useSelector, useDispatch } from "react-redux";
-import { set, selectLayout } from "./layoutSlice";
+import { set, selectLayout } from "../slices/layoutSlice";
 
 export default function LayoutSelect() {
   const layout = useSelector(selectLayout);

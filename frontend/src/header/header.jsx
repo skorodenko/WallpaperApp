@@ -3,11 +3,12 @@ import AppBar from "@mui/material/AppBar";
 import WallpaperOutlinedIcon from "@mui/icons-material/WallpaperOutlined";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ThemeSwitcher from "./themeSwitcher";
-import LayoutSelect from "../album/layoutSelect";
+import LayoutSelect from "./layoutSelect";
 import Divider from "@mui/material/Divider";
 
 export function WMenu() {
@@ -23,17 +24,15 @@ export function WMenu() {
 
   return (
     <React.Fragment>
-      <Button
-        id="basic-button"
+      <IconButton
         aria-controls={open ? "basic-menu" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        Settings
-      </Button>
+        <MenuIcon />
+      </IconButton>
       <Menu
-        id="basic-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
