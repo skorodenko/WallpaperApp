@@ -167,3 +167,4 @@ dmypy.json
 # Pyre type checker
 .pyre/
 /.tmuxinator.yml
+.directory
