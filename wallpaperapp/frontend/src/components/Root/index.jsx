@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import {useSpring, config, animated} from "@react-spring/web"
+import {useSpring, animated} from "@react-spring/web"
 
 import { selectTheme } from "redux/themeSlice"
 import Fnav from "components/Fnav"
@@ -13,7 +13,6 @@ export default function Root() {
         from: {...themes.light},
         to: {...themes.dark},
         reverse: mode === "light",
-        config: config.gentle,
     }), [mode])
 
     return (
