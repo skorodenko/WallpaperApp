@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react"
-import {useSpring, animated, config} from "@react-spring/web"
+import {useSpring, animated} from "@react-spring/web"
 
 import { useDispatch } from "react-redux";
 import { toggle } from "redux/themeSlice";
-import { themes } from "themes/theming"
 
 import Title from "./Title";
 
@@ -12,15 +11,8 @@ import styles from "./styles.module.css"
 export default function Fnav(props) {
     const [atTop, setAtTop] = useState(window.scrollY >= 20)
     const dispatch = useDispatch()
-    const mode = props.mode
-
-    const [theme_props,] = useSpring(() => ({
-        from:{...themes.light.fnav},
-        to:{...themes.dark.fnav},
-        reverse: mode === "light",
-        config: config.gentle,
-    }), [mode])
-
+    const theme = props.theme
+    
     const [float_props,] = useSpring(() => ({
         from: {maxWidth:"100%", borderRadius:"0px", margin:"0px"},
         to: {maxWidth:"90%", borderRadius:"6px", margin:"10px"},
@@ -38,9 +30,9 @@ export default function Fnav(props) {
 
     return (
         <div className={styles.header}>
-            <animated.div className={styles.fnav_container} style={{...float_props, ...theme_props}}>
+            <animated.div className={styles.fnav_container} style={{...float_props, backgroundColor: theme.fnav_bg, color: theme.color}}>
                 <span className={styles.spacer}/>
-                <Title mode={mode}/>
+                <Title/>
                 <span className={styles.spacer}/>
                 <button className={styles.toggle} onClick={ () => dispatch(toggle()) }>Toggle Theme</button>
             </animated.div>

@@ -1,22 +1,12 @@
 export const themes = {
     light: {
-        base: {
-            backgroundColor: "rgb(225,225,225)",
-            color: "black",
-        },
-        fnav: {
-            backgroundColor: "rgba(200,200,200,.7)",
-            color: "black",
-        },
+        color: "black",
+        backgroundColor: "rgb(225,225,225)",
+        fnav_bg: "rgba(200,200,200,.7)",
     },
     dark: {
-        base: {
-            backgroundColor: "rgb(75,75,75)",
-            color: "white",
-        },
-        fnav: {
-            backgroundColor: "rgba(100,100,100,.7)",
-            color: "white",
-        },
+        color: "white",
+        backgroundColor: "rgb(75,75,75)",
+        fnav_bg: "rgba(100,100,100,.7)",
     },
 };
