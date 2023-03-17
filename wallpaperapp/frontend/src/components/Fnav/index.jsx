@@ -1,34 +1,34 @@
 import React, { useEffect, useState } from "react"
 import {useSpring, animated, config} from "@react-spring/web"
-import { themes } from "themes/theming"
-import { useSelector } from 'react-redux';
-import { selectTheme } from "redux/themeSlice"
 
 import { useDispatch } from "react-redux";
 import { toggle } from "redux/themeSlice";
+import { themes } from "themes/theming"
+
+import Title from "./Title";
 
 import styles from "./styles.module.css"
 
-export default function Fnav() {
-    const [atTop, setAtTop] = useState(window.scrollY >= 15)
-    const mode = useSelector(selectTheme)
+export default function Fnav(props) {
+    const [atTop, setAtTop] = useState(window.scrollY >= 20)
     const dispatch = useDispatch()
+    const mode = props.mode
 
     const [theme_props,] = useSpring(() => ({
-        from:{backgroundColor: themes.light.fnav_primary},
-        to:{backgroundColor: themes.dark.fnav_primary},
+        from:{...themes.light.fnav},
+        to:{...themes.dark.fnav},
         reverse: mode === "light",
         config: config.gentle,
     }), [mode])
 
-    const [props,] = useSpring(() => ({
+    const [float_props,] = useSpring(() => ({
         from: {maxWidth:"100%", borderRadius:"0px", margin:"0px"},
-        to: {maxWidth:"90%", borderRadius:"6px", margin:"8px"},
+        to: {maxWidth:"90%", borderRadius:"6px", margin:"10px"},
         reverse: !atTop,
     }), [atTop])
 
     function handleScrollTop() {
-        window.scrollY >= 15 ? setAtTop(true) : setAtTop(false)
+        window.scrollY >= 20 ? setAtTop(true) : setAtTop(false)
     }
 
     useEffect(() => {
@@ -38,9 +38,11 @@ export default function Fnav() {
 
     return (
         <div className={styles.header}>
-            <animated.div className={styles.fnav_container} style={{...props, ...theme_props}}>
-                <h2 className={styles.title}>WallpaperApp</h2>
-                <button onClick={ () => dispatch(toggle()) }>Toggle Theme</button>
+            <animated.div className={styles.fnav_container} style={{...float_props, ...theme_props}}>
+                <span className={styles.spacer}/>
+                <Title mode={mode}/>
+                <span className={styles.spacer}/>
+                <button className={styles.toggle} onClick={ () => dispatch(toggle()) }>Toggle Theme</button>
             </animated.div>
         </div>
     )

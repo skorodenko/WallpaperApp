@@ -1,14 +1,15 @@
-import store from "redux/store";
-import { Provider } from "react-redux";
+import { useSelector } from "react-redux";
 
-import Fnav from "../Fnav"
+import { selectTheme } from "redux/themeSlice"
+import Fnav from "components/Fnav"
 import "./index.css"
 
 export default function Root() {
+    const mode = useSelector(selectTheme)
+    
     return (
         <>
-            <Provider store={store}>
-            <Fnav/>
+            <Fnav mode={mode}/>
             <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis purus varius, laoreet massa nec, tincidunt magna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut feugiat, urna ac rhoncus congue, odio sem tempus ex, ut mollis enim enim in sapien. Cras non orci ac est facilisis fermentum sed in erat. Curabitur et pharetra ipsum, non auctor purus. Praesent volutpat id nisi sed viverra. Aliquam a odio eu ligula posuere ultrices sed in tellus. Aliquam metus lectus, commodo nec feugiat ac, sollicitudin at magna. Praesent molestie pellentesque dapibus.
 
 Aliquam nisl diam, luctus aliquam interdum vitae, finibus quis arcu. Sed in leo sed mi consequat venenatis. Nulla eu erat non metus facilisis scelerisque. Etiam sodales felis libero, non consectetur nulla ultrices ac. Sed ullamcorper sit amet dui sed euismod. Fusce tincidunt vestibulum mauris, maximus auctor eros feugiat non. Proin efficitur ut erat at vehicula. Morbi sed nisi suscipit, viverra lectus nec, efficitur lacus.
@@ -28,7 +29,6 @@ Phasellus pulvinar odio vel sem faucibus fringilla. Aliquam non volutpat lectus.
 Morbi sed dapibus nulla. Duis id tempor dui, in lobortis ligula. Vestibulum ullamcorper et neque at vestibulum. Integer eleifend risus eu vehicula finibus. Nam finibus vel sapien nec commodo. Sed blandit pulvinar neque, sed interdum ex. Vivamus quis eros non sapien ultrices congue. Aliquam libero sapien, sagittis vel faucibus non, commodo sed ante. Quisque sollicitudin molestie libero id dapibus. Ut at erat nec nulla lobortis consequat. Curabitur tempor felis vitae sollicitudin facilisis. Donec in elit ut eros porttitor dictum. Suspendisse sem nisi, fermentum eu vestibulum auctor, congue ut neque. Praesent blandit diam eget tortor bibendum hendrerit. Vestibulum dictum metus enim, aliquam lacinia odio volutpat et. Suspendisse consequat, magna sit amet ultricies porta, leo mauris sagittis enim, vel fringilla leo ipsum in metus.
 
 Aliquam et felis in leo sagittis varius aliquam vel urna. Phasellus ullamcorper elit nulla, ac ultrices nisi maximus quis. Etiam dui quam, hendrerit quis blandit at, mollis vel orci. Maecenas quis quam in orci sodales hendrerit. Pellentesque elementum egestas lorem id pretium. Proin porttitor eu urna at maximus. Etiam pulvinar massa ante, a pretium urna pellentesque ac. Duis sed metus hendrerit, eleifend orci commodo, varius leo. Aenean elementum sed libero non tempus. Praesent est justo, accumsan hendrerit fringilla quis, tincidunt id lorem. Mauris sed eleifend lectus, vel accumsan turpis. Duis mattis, neque id euismod dictum, velit eros volutpat quam, ut sollicitudin nisl lorem a nisi. Morbi nec leo ligula. Vivamus efficitur finibus placerat. Donec volutpat feugiat ligula, non viverra nisl. Nulla imperdiet suscipit ex vel tempus.</h1>
-            </Provider>
         </>
     )
 }

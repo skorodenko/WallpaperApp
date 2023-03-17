@@ -11,6 +11,15 @@
 .title {
     margin-top: auto;
     margin-bottom: auto;
+    align-self: center;
+}
+
+.toggle {
+    align-self: flex-end;
+}
+
+.spacer {
+    flex: 10;
 }
 
 .header {
