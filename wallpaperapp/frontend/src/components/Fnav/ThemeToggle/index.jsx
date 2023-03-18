@@ -43,12 +43,11 @@ export default function ThemeToggle() {
     const ref_sc8 = useSpringRef()
     const theme_sc8 = useSpring({ref:ref_sc8,from:{...polar2cart(135, false)},to:{...polar2cart(135, true)},reverse: mode==="light"})
 
-    const timeframes = [0,0,.3,.4,.5,.6,.7,.8,.9,1]
+    const timeframes = [1,.9,.8,.7,.6,.5,.4,.3,0,0]
     const refs = [ref_m2c,ref_cre,ref_sc1,ref_sc2,ref_sc3,ref_sc4,ref_sc5,ref_sc6,ref_sc7,ref_sc8]
 
     useChain(mode === "light" ? refs : refs.reverse(), 
-             mode === "light" ? timeframes : timeframes.reverse(), 
-             350)
+            timeframes, 350)
 
     
     return (
