@@ -19,7 +19,7 @@ export default function ThemeToggle() {
         const hiddenBiasY = !shown * 4 
         const x = hiddenBiasX + centralCircle.cx + shown * centralCircle.r * Math.cos(angle * Math.PI / 180)
         const y = hiddenBiasY + centralCircle.cy - shown * centralCircle.r * Math.sin(angle * Math.PI / 180)
-        return { cx: x, cy: y, r: "2"}
+        return { cx: x, cy: y, r: 2}
     }
 
     const ref_m2c = useSpringRef()
