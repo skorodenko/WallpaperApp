@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from "react"
 import {useSpring, animated} from "@react-spring/web"
 
-import { useDispatch } from "react-redux";
-import { toggle } from "redux/themeSlice";
-
+import ThemeToggle from "./ThemeToggle";
 import Title from "./Title";
 
 import styles from "./styles.module.css"
 
 export default function Fnav(props) {
     const [atTop, setAtTop] = useState(window.scrollY >= 20)
-    const dispatch = useDispatch()
     const theme = props.theme
     
     const [float_props,] = useSpring(() => ({
@@ -34,7 +31,7 @@ export default function Fnav(props) {
                 <span className={styles.spacer}/>
                 <Title/>
                 <span className={styles.spacer}/>
-                <button className={styles.toggle} onClick={ () => dispatch(toggle()) }>Toggle Theme</button>
+                <ThemeToggle/>
             </animated.div>
         </div>
     )
