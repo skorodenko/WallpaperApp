@@ -18,7 +18,7 @@ export default function Root() {
     return (
         <animated.div style={theme_props}>
             <Fnav theme={theme_props}/>
-            <h1>
+            <h1 style={{margin: 0}}>
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis purus varius, laoreet massa nec, tincidunt magna. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut feugiat, urna ac rhoncus congue, odio sem tempus ex, ut mollis enim enim in sapien. Cras non orci ac est facilisis fermentum sed in erat. Curabitur et pharetra ipsum, non auctor purus. Praesent volutpat id nisi sed viverra. Aliquam a odio eu ligula posuere ultrices sed in tellus. Aliquam metus lectus, commodo nec feugiat ac, sollicitudin at magna. Praesent molestie pellentesque dapibus.
 
 Aliquam nisl diam, luctus aliquam interdum vitae, finibus quis arcu. Sed in leo sed mi consequat venenatis. Nulla eu erat non metus facilisis scelerisque. Etiam sodales felis libero, non consectetur nulla ultrices ac. Sed ullamcorper sit amet dui sed euismod. Fusce tincidunt vestibulum mauris, maximus auctor eros feugiat non. Proin efficitur ut erat at vehicula. Morbi sed nisi suscipit, viverra lectus nec, efficitur lacus.
