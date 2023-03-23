@@ -3,12 +3,12 @@ import {useSpring, animated} from "@react-spring/web"
 
 import ThemeToggle from "./ThemeToggle";
 import Title from "./Title";
+import Menu from "./Menu";
 
 import styles from "./styles.module.css"
 
-export default function Fnav(props) {
+export default function Fnav({theme}) {
     const [atTop, setAtTop] = useState(window.scrollY >= 20)
-    const theme = props.theme
     
     const [float_props,] = useSpring(() => ({
         from: {maxWidth:"100%", borderRadius:"0px", margin:"0px"},
@@ -27,7 +27,8 @@ export default function Fnav(props) {
 
     return (
         <div className={styles.header}>
-            <animated.div className={styles.fnav_container} style={{...float_props, backgroundColor: theme.fnav_bg, color: theme.color}}>
+            <animated.div className={styles.fnav_container} style={{...float_props, backgroundColor: theme.blur_bg, color: theme.color}}>
+                <Menu theme={theme}/>
                 <span className={styles.spacer}/>
                 <Title/>
                 <span className={styles.spacer}/>
