@@ -19,6 +19,7 @@ export default function Root() {
     return (
         <>
             <div id="modal"></div>
+            <div id="overlay"></div>
             <Auth theme={theme_props} />
         </>
     )

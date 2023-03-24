@@ -26,8 +26,8 @@ export default function Fnav({theme}) {
     })
 
     return (
-        <div className={styles.header}>
-            <animated.div className={styles.fnav_container} style={{...float_props, backgroundColor: theme.blur_bg, color: theme.color}}>
+        <div className={styles.header} styles={{backgroundColor: theme.blur_bg}}>
+            <animated.div className={styles.fnav_container} style={{...float_props, ...theme, backgroundColor: theme.blur_bg}}>
                 <Menu theme={theme}/>
                 <span className={styles.spacer}/>
                 <Title/>

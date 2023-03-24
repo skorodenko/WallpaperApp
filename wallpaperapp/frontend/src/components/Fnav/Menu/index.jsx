@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useSpring, useChain, useSpringRef, animated, config } from "@react-spring/web"
 
 import MenuModal from "./modal";
+import Overlay from "./overlay";
 
 import styles from "../styles.module.css"
 
@@ -35,6 +36,7 @@ export default function Menu({theme}) {
                 <animated.line x1="3" y1="20" x2="21" y2={theme_lower.y2} />
             </svg>
             {domReady && createPortal(<MenuModal open={open} theme={theme}/>, document.getElementById("modal"))}
+            {domReady && createPortal(<Overlay open={open} closeModal={() => setOpen(false)} theme={theme}/>, document.getElementById("overlay"))}
         </>
     )
 }
