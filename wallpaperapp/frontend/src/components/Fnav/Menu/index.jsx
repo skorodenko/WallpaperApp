@@ -9,6 +9,9 @@ import styles from "../styles.module.css"
 
 export default function Menu({theme}) {
     const [open, setOpen] = useState(false)
+    const [domReady, setDomReady] = useState(false)
+
+    useEffect(() => setDomReady(true), [domReady])
 
     const theme_central = useSpring({ from: { x1: 3, x2: 21 }, to: { x1: 12, x2: 12 }, reverse: !open })
     const theme_upper = useSpring({ from: { y2: 4 }, to: { y2: 20 }, reverse: !open })
@@ -33,8 +36,8 @@ export default function Menu({theme}) {
                 <animated.line x1="3" y1="20" x2="21" y2={theme_lower.y2} />
             </svg>
 
-            <MenuModal open={open} theme={theme}/>
-            <Overlay open={open} closeModal={() => setOpen(false)} theme={theme}/>
+            {domReady && <MenuModal open={open} theme={theme}/>}
+            {domReady && <Overlay open={open} closeModal={() => setOpen(false)} theme={theme}/>}
         </>
     )
 }
