@@ -1,16 +1,19 @@
 import { useSpring, useChain, useSpringRef, useTransition, animated, config } from "@react-spring/web"
+import { createPortal } from "react-dom";
 
 import styles from "../styles.module.css"
 
 
 export default function Overlay({ theme, open, closeModal }) {
-    const [theme_blur,] = useSpring({
-        from: {opacity: 0, background: "rgba(0,0,0,0)", pointerEvents: "none"},
-        to: {opacity: 1, background: theme.blur_bg, pointerEvents: "all"},
-        reverse: !open,
-    }, [open])
-    
-    return (
-        <animated.div onClick={closeModal} style={theme_blur} className={styles.modal_overlay}/>
+    const transition = useTransition(open ? [open] : [], {
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+    })
+
+    return createPortal(
+        transition((style,item) => (
+            <animated.div style={{...style, backgroundColor: theme.blur_bg}} onClick={closeModal} className={styles.modal_overlay}/>)),
+        document.getElementById("overlay")
     )
 }
