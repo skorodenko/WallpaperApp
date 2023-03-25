@@ -1,8 +1,8 @@
-import {animated} from "@react-spring/web"
+import { animated } from "@react-spring/web"
 
 import styles from "../styles.module.css"
 
-export default function Login({theme}) {
+export default function Login({ theme, register }) {
     return (
         <form className={styles.form}>
             <h2 className={styles.title}>Log in</h2>
@@ -15,7 +15,7 @@ export default function Login({theme}) {
                 <label>Password</label>
             </div>
             <div className={styles.links}>
-                <a className={styles.register}>Register</a>
+                <p className={styles.register} onClick={register}>Register</p>
                 <p className={styles.forget}>Forgot password</p>
             </div>
             <animated.button className={styles.login} style={{backgroundColor: theme.color, color: theme.backgroundColor}}>Log in</animated.button>
