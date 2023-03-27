@@ -22,10 +22,10 @@ export default function Auth({ theme }) {
             <animated.div className={styles.masonry} style={theme} />
             <Fnav theme={theme} />
             <Wrapper theme={theme} open={!register} refr={loginRef}>
-                <Login theme={theme} register={() => setRegister(true)} />
+                <Login theme={theme} to_register={() => setRegister(true)} />
             </Wrapper>
             <Wrapper theme={theme} open={register} refr={registerRef}>
-                <Register theme={theme} login={() => setRegister(false)} />
+                <Register theme={theme} to_login={() => setRegister(false)} />
             </Wrapper>
         </>
     )

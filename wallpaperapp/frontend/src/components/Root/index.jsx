@@ -1,4 +1,5 @@
 import { useSpring } from "@react-spring/web"
+import { Toaster } from "react-hot-toast"
 
 import { useSelector } from "react-redux";
 import { selectTheme } from "redux/themeSlice"
@@ -21,6 +22,22 @@ export default function Root() {
             <div id="modal"></div>
             <div id="overlay"></div>
             <Auth theme={theme_props} />
+            <Toaster 
+                position="bottom-center"
+                containerStyle={{
+                    transform: "translateY(-5%)"
+                }}
+                toastOptions={{
+                    style: {
+                        background: mode === "light" 
+                            ? themes.light.color 
+                            : themes.dark.color,
+                        color: mode === "light" 
+                            ? themes.light.backgroundColor
+                            : themes.dark.backgroundColor,
+                    }
+                }}
+            />
         </>
     )
 }
