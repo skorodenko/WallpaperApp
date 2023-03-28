@@ -20,7 +20,6 @@ export default function Login({ theme, to_register }) {
             username: data.username,
             password: data.password,
         }).then((response) => {
-            console.log(response)
             dispatch(setToken(response.data.access))
         }).catch((err) => {
             if (err.response) {

@@ -21,7 +21,9 @@ export default function Root() {
         <>
             <div id="modal"></div>
             <div id="overlay"></div>
+            
             <Auth theme={theme_props} />
+
             <Toaster 
                 position="bottom-center"
                 containerStyle={{
