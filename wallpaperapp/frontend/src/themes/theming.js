@@ -7,6 +7,6 @@ export const themes = {
     dark: {
         color: "white",
         backgroundColor: "rgb(0,0,0)",
-        blur_bg: "rgba(20,20,20,.7)",
+        blur_bg: "rgba(35,35,35,.7)",
     },
 };
