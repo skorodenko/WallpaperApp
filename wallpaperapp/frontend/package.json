@@ -14,7 +14,9 @@
     "react-hook-form": "^7.43.8",
     "react-hot-toast": "^2.4.0",
     "react-icons": "^4.8.0",
+    "react-query": "^3.39.3",
     "react-redux": "^8.0.5",
+    "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
     "react-use-measure": "^2.1.1",
     "web-vitals": "^2.1.0"
