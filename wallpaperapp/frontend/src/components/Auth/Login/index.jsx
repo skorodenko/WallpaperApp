@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { setToken } from "redux/authSlice";
 
 import styles from "../styles.module.css"
-import axios from "api/axios";
+import {clientAxios} from "api/axios";
 
 
 const LOGIN_URL = "/auth/login/"
@@ -16,11 +16,11 @@ export default function Login({ theme, to_register }) {
     const { register, handleSubmit } = useForm({shouldUseNativeValidation: true});
 
     const onSubmit = (data) => {
-        const promise = axios.post(LOGIN_URL, {
+        const promise = clientAxios.post(LOGIN_URL, {
             username: data.username,
             password: data.password,
         }).then((response) => {
-            dispatch(setToken(response.data.access))
+            dispatch(setToken({token: response.data.access}))
         }).catch((err) => {
             if (err.response) {
                 const data = err.response.data
