@@ -2295,6 +2295,18 @@
     "@typescript-eslint/types" "5.54.1"
     eslint-visitor-keys "^3.3.0"
 
+"@use-gesture/core@10.2.25":
+  version "10.2.25"
+  resolved "https://registry.yarnpkg.com/@use-gesture/core/-/core-10.2.25.tgz#5f21c28c4f0bf1a1be87f2ac8bb49ad39dfd818b"
+  integrity sha512-tn01i1//mZrv+9VwyGB4KiuA6fQWvPfzwJNwcjxtMBeW0ELBukXOimvdm3hztxkpVwlz8dhQnXzkjtsxSpe9VA==
+
+"@use-gesture/react@^10.2.25":
+  version "10.2.25"
+  resolved "https://registry.yarnpkg.com/@use-gesture/react/-/react-10.2.25.tgz#e0ca154bfe5792ef4fd8a831e983212867dd37bb"
+  integrity sha512-DCxBNxILAFPp74O5f0zhXshmf5Vur4sKJmNX+gbNvg2mdJgch6iWRmahsDE1BqeaTgwZL/gwKIbl5VsP6PTgVg==
+  dependencies:
+    "@use-gesture/core" "10.2.25"
+
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
   resolved "https://registry.yarnpkg.com/@webassemblyjs/ast/-/ast-1.11.1.tgz#2bfd767eae1a6996f432ff7e8d7fc75679c0b6a7"
@@ -7671,6 +7683,11 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
 
+react-loading-skeleton@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/react-loading-skeleton/-/react-loading-skeleton-3.2.0.tgz#c79f1390195bcd8625c30e68454a1b95508a9c74"
+  integrity sha512-kN12x4Ud69jbksr2EdhYywAFeW4bPdvFQ9p3ID1OM/QeFjgwFSmSUY2a6P6uOb5ACzWp3ozY8C+7+04KR6+PHA==
+
 react-query@^3.39.3:
   version "3.39.3"
   resolved "https://registry.yarnpkg.com/react-query/-/react-query-3.39.3.tgz#4cea7127c6c26bdea2de5fb63e51044330b03f35"
@@ -7766,6 +7783,11 @@ react-scripts@5.0.1:
     workbox-webpack-plugin "^6.4.1"
   optionalDependencies:
     fsevents "^2.3.2"
+
+react-tag-input-component@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/react-tag-input-component/-/react-tag-input-component-2.0.2.tgz#f62f013c6a535141dd1c6c3a88858223170150f1"
+  integrity sha512-dydI9luVwwv9vrjE5u1TTnkcOVkOVL6mhFti8r6hLi78V2F2EKWQOLptURz79UYbDHLSk6tnbvGl8FE+sMpADg==
 
 react-use-measure@^2.1.1:
   version "2.1.1"
