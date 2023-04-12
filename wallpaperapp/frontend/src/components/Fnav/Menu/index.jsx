@@ -1,9 +1,8 @@
-import { createPortal } from "react-dom";
 import { useState, useEffect, useTransition, useCallback } from "react";
 import { useSpring, useChain, useSpringRef, animated, config } from "@react-spring/web"
 
 import MenuModal from "./modal";
-import Overlay from "./overlay";
+import Overlay from "./overlay"
 
 import styles from "../styles.module.css"
 

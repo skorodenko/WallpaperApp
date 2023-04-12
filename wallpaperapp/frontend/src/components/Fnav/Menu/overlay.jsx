@@ -13,7 +13,7 @@ export default function Overlay({ theme, open, closeModal }) {
 
     return createPortal(
         transition((style,item) => (
-            <animated.div style={{...style, backgroundColor: theme.blur_bg}} onClick={closeModal} className={styles.modal_overlay}/>)),
+            <animated.div style={{...style, backgroundColor: theme.blur_bg}} onClick={closeModal} className={styles.overlay}/>)),
         document.getElementById("overlay")
     )
 }

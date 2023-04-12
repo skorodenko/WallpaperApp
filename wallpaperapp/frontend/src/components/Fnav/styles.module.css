@@ -7,6 +7,7 @@
 }
 
 .header {
+    grid-area: fnav;
     z-index: 100;
     display: flex;
     top: 0;
@@ -53,7 +54,7 @@
     text-decoration: underline;
 }
 
-.modal_overlay {
+.overlay {
     z-index: 50;
     backdrop-filter: blur(4px);
     position:  fixed;
