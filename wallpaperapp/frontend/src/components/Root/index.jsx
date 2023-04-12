@@ -6,11 +6,12 @@ import {
     Routes,
 } from "react-router-dom";
 
+import store from "redux/store";
 import { useSelector } from "react-redux";
 import { selectTheme } from "redux/themeSlice"
 import Home from "components/Home"
 import Auth from "components/Auth"
-import store from "redux/store";
+import WallpaperUploader from "components/WallpaperUploader";
 import Profile from "components/Profile";
 import { themes } from "themes/theming";
 import "./index.css"
@@ -42,6 +43,11 @@ export default function Root() {
                     <Route
                         element={<Profile theme={theme_props} />}
                         path="/profile"
+                    />
+                    
+                    <Route
+                        element={<WallpaperUploader theme={theme_props} />}
+                        path="/profile/uploader"
                     />
 
                     <Route

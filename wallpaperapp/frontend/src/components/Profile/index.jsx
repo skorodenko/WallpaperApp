@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useQueries } from "react-query";
 import { animated } from "@react-spring/web";
 
 import styles from "./styles.module.css"
@@ -21,7 +19,7 @@ export default function Profile({ theme }) {
         })
 
     return (
-        <animated.div style={theme}>
+        <animated.div className={styles.page} style={theme}>
             <Fnav theme={theme} />
             <animated.div className={styles.container_grid} style={theme}>
                 <animated.div className={styles.user_info_container} style={{...theme, backgroundColor: theme.blur_bg}}>

@@ -14,19 +14,27 @@
     }
 }
 
-.container_grid {
-    gap: 16px;
-    padding: 20px;
+.page {
     position: absolute;
-    box-sizing: border-box;
-    height: calc(100% - 50px);
-    /* 50px -> fnav height */
-    width: calc(100%);
+    display: grid;
+    width: 100%;
+    height: 100%;
+    grid-template-columns: 100fr;
+    grid-template-rows: 50px 1fr;
+    grid-template-areas:
+        "fnav"
+        "page_content";
+}
+
+.container_grid {
+    grid-area: page_content;
+    gap: 16px;
+    padding: 16px;
     display: grid;
     align-content: center;
     justify-content: center;
-    grid-template-columns: 10% 90%;
-    grid-template-rows: 10% 90%;
+    grid-template-columns: 10fr 90fr;
+    grid-template-rows: 10fr 90fr;
 }
 
 .user_info_container {

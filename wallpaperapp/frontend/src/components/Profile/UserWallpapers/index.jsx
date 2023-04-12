@@ -1,11 +1,13 @@
 import { useState } from "react"
 import { animated } from "@react-spring/web"
+import { useNavigate } from "react-router-dom"
 
 import Tabs from "./tabs"
 import styles from "../styles.module.css"
 
 export default function UserWallpapers({ theme }) {
     const [activeTab, changeTab] = useState("Uploaded")
+    const navigate = useNavigate()
 
     const isUploadButtonVisible = activeTab === "Uploaded";
 
@@ -17,6 +19,7 @@ export default function UserWallpapers({ theme }) {
                     <animated.button 
                         className={styles.uploadButton} 
                         style={{backgroundColor: theme.color, color: theme.backgroundColor}}
+                        onClick={() => navigate("/profile/uploader")}
                     >
                         Upload
                     </animated.button>}
