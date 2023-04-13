@@ -5,6 +5,11 @@ const BASE_URL = "http://192.168.0.147:8000"
 
 const REFRESH_URL = "/auth/login/refresh/"
 
+export const authAxios = axios.create({
+    baseURL: BASE_URL,
+    withCredentials: true,
+})
+
 export const clientAxios = axios.create({
     baseURL: BASE_URL,
     withCredentials: true,
@@ -30,10 +35,10 @@ export function setupAxiosInterceptors(store) {
         },
         async err => {
             const originalConfig = err.config
-            if (err?.response?.status === 401 && !originalConfig._retry) {
+            if (err.response?.status === 401 && !originalConfig._retry) {
                 originalConfig._retry = true;
                 
-                await clientAxios.post(REFRESH_URL).then((response) => {
+                await authAxios.post(REFRESH_URL).then((response) => {
                     store.dispatch(setToken({token: response.data.access}))
                 }).catch((err) => Promise.reject(err))
                 
