@@ -3,7 +3,7 @@ import { useDrag } from "@use-gesture/react";
 
 import styles from "../styles.module.css"
 
-export default function ImageCard({ image, theme, staged, setActive, close, ...props }) {
+export default function ImageCard({ image, theme, staged, setActive, ...props }) {
     const bind = useDrag(
         ({ tap }) => {
             if (tap) setActive(image)

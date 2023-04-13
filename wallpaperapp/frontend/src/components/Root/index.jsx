@@ -16,6 +16,7 @@ import Profile from "components/Profile";
 import { themes } from "themes/theming";
 import "./index.css"
 import { setupAxiosInterceptors } from "api/axios";
+import { useEffect } from "react";
 
 export default function Root() {
     const mode = useSelector(selectTheme)
@@ -26,7 +27,7 @@ export default function Root() {
         reverse: mode === "light",
     }), [mode])
 
-    setupAxiosInterceptors(store)
+    useEffect(() => setupAxiosInterceptors(store))
 
     return (
         <>
