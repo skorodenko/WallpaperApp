@@ -22,15 +22,7 @@ export default function Login({ theme, to_register }) {
         }).then((response) => {
             dispatch(setToken({token: response.data.access}))
         }).catch((err) => {
-            if (err.response) {
-                const data = err.response.data
-                console.log(data)
-            } else if (err.requset) {
-                console.log(err.requset)
-            } else {
-                console.log(err)
-                toast.error(err.message)
-            }
+            toast.error(err.message)
             throw err
         })
 
