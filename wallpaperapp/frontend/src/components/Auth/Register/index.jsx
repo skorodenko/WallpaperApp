@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
 import styles from "../styles.module.css"
-import {authAxios} from "api/axios";
+import { publicAxios } from "api/axios";
 
 
 const REGISTER_URL = "/auth/register/"
@@ -13,7 +13,7 @@ export default function Register({ theme, to_login }) {
     const { register, handleSubmit } = useForm({ shouldUseNativeValidation: true });
 
     const onSubmit = (form) => {
-        const promise = authAxios.post(REGISTER_URL, {
+        const promise = publicAxios.post(REGISTER_URL, {
             username: form.username,
             email: form.email,
             password: form.password,

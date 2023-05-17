@@ -11,7 +11,7 @@ import styles from "../styles.module.css"
 const height = 435
 const vheight = 35
 
-export default function ListImages({ theme, onImageChange, imageList, stagedList, setActiveImage, uploadStaged }) {
+export default function ListImages({ theme, onImageChange, imageList, setActiveImage, upload }) {
     const [domReady, setDomReady] = useState(false)
     const [isOpen, setOpen] = useState(false)
 
@@ -69,9 +69,9 @@ export default function ListImages({ theme, onImageChange, imageList, stagedList
                     <animated.button
                         className={styles.add_button}
                         style={{ color: theme.backgroundColor, backgroundColor: theme.color }}
-                        onClick={uploadStaged}
+                        onClick={upload}
                     >
-                        Upload staged
+                        Upload
                     </animated.button>
                 </animated.div>
                 <ImageSlider theme={theme}>
@@ -81,7 +81,6 @@ export default function ListImages({ theme, onImageChange, imageList, stagedList
                                     image={img} 
                                     theme={theme} 
                                     setActive={setActiveImage}
-                                    staged={stagedList.includes(img)}
                                 />})}
                 </ImageSlider>
             </animated.div>

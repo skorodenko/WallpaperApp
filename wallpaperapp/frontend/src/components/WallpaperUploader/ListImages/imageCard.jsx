@@ -3,15 +3,13 @@ import { useDrag } from "@use-gesture/react";
 
 import styles from "../styles.module.css"
 
-export default function ImageCard({ image, theme, staged, setActive, ...props }) {
+export default function ImageCard({ image, theme, setActive, ...props }) {
     const bind = useDrag(
         ({ tap }) => {
             if (tap) setActive(image)
         },
         { filterTaps: true }
     );
-
-    const border = staged ? "solid 2px green" : "none"
 
     return (
         <animated.div 
@@ -23,7 +21,6 @@ export default function ImageCard({ image, theme, staged, setActive, ...props })
                     ...theme,
                     backgroundImage: `url(${image.url})`,
                     backgroundColor: theme.blur_bg,
-                    border: border
                 }
             } 
         />

@@ -33,13 +33,17 @@
     display: grid;
     align-content: center;
     justify-content: center;
-    grid-template-columns: 10fr 90fr;
-    grid-template-rows: 10fr 90fr;
+    grid-template-columns: 15fr 85fr;
+    grid-template-rows: 15fr 85fr;
 }
 
 .user_info_container {
     grid-area: info;
     border-radius: 8px;
+}
+
+.user_info {
+    margin: 12px;
 }
 
 .user_wallpapers_container {

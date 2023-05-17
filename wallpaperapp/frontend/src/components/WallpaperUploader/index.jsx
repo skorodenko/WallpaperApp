@@ -15,7 +15,6 @@ const upload_url = "/images/"
 export default function WallpaperUploader({ theme }) {
     const [images, setImages] = useState([])
     const [imageURLs, setImageURLs] = useState([])
-    const [stagedImages, setStagedImages] = useState([])
     const [activeImage, setActiveImage] = useState(null)
 
     useEffect(() => {
@@ -36,29 +35,18 @@ export default function WallpaperUploader({ theme }) {
 
     const removeImages = (images) => {
         setImageURLs(imageURLs.filter(img => !images.includes(img)))
-        setStagedImages(stagedImages.filter(img => !images.includes(img)))
         if (images.includes(activeImage)) setActiveImage(null)
-    }
-
-    const stageImage = (image, isStaged) => {
-        if (isStaged) {
-            // If image is already staged -> unstage
-            setStagedImages(stagedImages.filter(img => img.url !== image.url))
-        } else {
-            // If image is not staged -> stage
-            setStagedImages([...stagedImages, image])
-        }
     }
 
     const onImageChange = (e) => {
         setImages([...e.target.files])
     }
 
-    const uploadStagedImages = async () => {
-        if(!stagedImages.length) throw new Error("No images were staged to upload")
-        if(stagedImages.some(img => img.tags.length === 0)) throw new Error("One of the staged images has not tags")
+    const uploadImages = async () => {
+        if(!imageURLs.length) throw new Error("No images to upload")
+        //if(imageURLs.some(img => img.tags.length === 0)) throw new Error("One of the images has not tags")
         
-        const uploaded = await Promise.all(stagedImages.map(async image => {
+        const uploaded = await Promise.all(imageURLs.map(async image => {
             return await clientAxios.postForm(upload_url, {
                 image: image.file,
                 tags: image.tags,
@@ -70,8 +58,8 @@ export default function WallpaperUploader({ theme }) {
         return uploaded
     }
 
-    const uploadStaged = () => {
-        const promise = uploadStagedImages()
+    const upload = () => {
+        const promise = uploadImages()
             .then(uploaded => {
                 removeImages(uploaded)
                 return uploaded.length
@@ -97,8 +85,6 @@ export default function WallpaperUploader({ theme }) {
                         theme={theme}
                         image={activeImage}
                         removeImage={() => removeImages([activeImage])}
-                        staged={stagedImages.includes(activeImage)}
-                        setStaged={stageImage}
                     />}
                 </animated.div>
                 <animated.div className={styles.image_container} style={{ ...theme }}>
@@ -108,9 +94,8 @@ export default function WallpaperUploader({ theme }) {
                     theme={theme}
                     onImageChange={onImageChange}
                     imageList={imageURLs}
-                    stagedList={stagedImages}
                     setActiveImage={setActiveImage}
-                    uploadStaged={uploadStaged}
+                    upload={upload}
                 />
             </animated.div>
         </animated.div>
