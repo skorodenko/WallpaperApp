@@ -15,10 +15,12 @@ import Home from "components/Home"
 import Auth from "components/Auth"
 import WallpaperUploader from "components/WallpaperUploader";
 import Profile from "components/Profile";
+import Wallpaper from "components/Wallpaper";
 import { themes } from "shared/themes";
 import "./index.css"
 import { setupAxiosInterceptors } from "api/axios";
 import { useEffect } from "react";
+import { animated } from "@react-spring/web";
 
 const queryClient = new QueryClient()
 
@@ -39,6 +41,7 @@ export default function Root() {
             <QueryClientProvider client={queryClient}>
                 <div id="modal"></div>
                 <div id="overlay"></div>
+                <animated.div style={theme_props} className={"colored_static_root"}/>
 
                 <SkeletonTheme baseColor={theme_props.color.get()} highlightColor={theme_props.backgroundColor.get()}>
                     <BrowserRouter>
@@ -46,6 +49,11 @@ export default function Root() {
                             <Route
                                 element={<Home theme={theme_props} />}
                                 path="/"
+                            />
+
+                            <Route
+                                element={<Wallpaper theme={theme_props}/>}
+                                path="/image/:image_uuid"
                             />
 
                             <Route

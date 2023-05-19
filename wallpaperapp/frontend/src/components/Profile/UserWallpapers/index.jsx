@@ -4,6 +4,13 @@ import { useNavigate } from "react-router-dom"
 
 import Tabs from "./tabs"
 import styles from "../styles.module.css"
+import Album from "components/Album"
+import { publicAxios } from "api/axios"
+
+const fetchImages = async ({ pageParam }) => {
+    const res = await publicAxios(`/images/`, { params: { page: pageParam, sort: "new", page_size: 50 } }).then(res => res.data)
+    return res
+}
 
 export default function UserWallpapers({ theme }) {
     const [activeTab, changeTab] = useState("Uploaded")
@@ -25,7 +32,7 @@ export default function UserWallpapers({ theme }) {
                     </animated.button>}
             </div>
             <div className={styles.tabbedViewContent}>
-                TEST
+                <Album theme={theme} fetchImages={fetchImages} />
             </div>
         </animated.div>
     )

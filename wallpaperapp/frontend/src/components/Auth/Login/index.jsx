@@ -7,6 +7,7 @@ import { setToken } from "redux/authSlice";
 
 import styles from "../styles.module.css"
 import {clientAxios} from "api/axios";
+import { useNavigate } from "react-router-dom";
 
 
 const LOGIN_URL = "/auth/login/"
@@ -14,6 +15,7 @@ const LOGIN_URL = "/auth/login/"
 export default function Login({ theme, to_register }) {
     const dispatch = useDispatch()
     const { register, handleSubmit } = useForm({shouldUseNativeValidation: true});
+    const navigate = useNavigate()
 
     const onSubmit = (data) => {
         const promise = clientAxios.post(LOGIN_URL, {
@@ -21,6 +23,7 @@ export default function Login({ theme, to_register }) {
             password: data.password,
         }).then((response) => {
             dispatch(setToken({token: response.data.access}))
+            navigate("/profile")
         }).catch((err) => {
             toast.error(err.message)
             throw err

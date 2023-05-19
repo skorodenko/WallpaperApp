@@ -1,5 +1,5 @@
-import { Suspense, useEffect, useImperativeHandle, useRef, useState } from "react"
-import { animated, config, useTransition } from "@react-spring/web"
+import { Suspense, useImperativeHandle, useRef, useState } from "react"
+import { animated, useTransition } from "@react-spring/web"
 import { useGesture } from "@use-gesture/react"
 import { useSpring } from "@react-spring/web"
 import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query"
@@ -8,7 +8,6 @@ import { AiOutlineLoading } from "react-icons/ai"
 import styles from "./styles.module.css"
 import ImageCard from "./imageCard"
 import { AiOutlineUp } from "react-icons/ai"
-import { createPortal } from "react-dom"
 
 
 function AlbumPage({ fetchImages, albumPageRef }) {
@@ -18,6 +17,8 @@ function AlbumPage({ fetchImages, albumPageRef }) {
         getNextPageParam: (lastPage, allPages) => lastPage?.next,
         suspense: true,
         cacheTime: 100,
+        keepPreviousData: true,
+        refetchOnMount: "always",
     })
 
     useImperativeHandle(albumPageRef, () => ({
@@ -38,7 +39,7 @@ function AlbumPage({ fetchImages, albumPageRef }) {
                         <ImageCard key={image.uuid} image={image} />
                     ))}
                 </div>
-                <div className={styles.page_separator}><div className={styles.separator}> <h2> Page {i} </h2> </div></div>
+                <div className={styles.page_separator}><div className={styles.separator}> <h2> Page {i+1} </h2> </div></div>
             </>
         ))
     )

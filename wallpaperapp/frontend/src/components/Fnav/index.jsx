@@ -17,7 +17,7 @@ export default function Fnav({theme}) {
     }
 
     useEffect(() => {
-        atTop ? fnav.start({maxWidth:"90%", borderRadius:"6px", marginTop:"10px"})
+        atTop ? fnav.start({maxWidth:"90%", borderRadius:"6px", marginTop:"15px"})
               : fnav.start({maxWidth:"100%", borderRadius:"0px", marginTop:"0px"})
     })
 

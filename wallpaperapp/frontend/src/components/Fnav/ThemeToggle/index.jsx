@@ -7,12 +7,14 @@ import { useSelector } from "react-redux";
 import { selectTheme } from "redux/themeSlice"
 
 import styles from "../styles.module.css"
+import { useState } from "react";
 
 
 export default function ThemeToggle() {
     const dispatch = useDispatch()
     const centralCircle = { cx: 33, cy: 33, r: 22 }
     const mode = useSelector(selectTheme)
+    const [firstChange, setFirstChange] = useState(true)
 
     function polar2cart(angle, shown = false) {
         const extendRadius = 1.2
@@ -40,13 +42,18 @@ export default function ThemeToggle() {
     const ref_sc6 = useSpringRef()
     const theme_sc6 = useSpring({ref:ref_sc6,from:{...polar2cart(225, false)},to:{...polar2cart(330, true)},reverse: mode==="light", config: config.stiff})
 
-    const timeframes = [1,1,.9,.8,.6,.4,.2,0]
+    const timeframes = !firstChange ? [1,1,.9,.8,.6,.4,.2,0] : [0,0,0,0,0,0,0,0]
+
     const refs = [ref_m2c,ref_cre,ref_sc1,ref_sc2,ref_sc3,ref_sc4,ref_sc5,ref_sc6]
 
     useChain(mode === "light" ? refs : refs.reverse(), 
             timeframes, 350)
 
-    
+    const onClick = () => {
+        dispatch(toggle())
+        setFirstChange(false)
+    }
+
     return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,7 +65,7 @@ export default function ThemeToggle() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            onClick={() => dispatch(toggle())}
+            onClick={onClick}
             className={styles.toggle}
         >
             <mask id="mask">

@@ -5,6 +5,7 @@ import useMeasure from "react-use-measure"
 import styles from "../styles.module.css"
 
 export default function Tabs({ activeTab, changeTab, theme }) {
+    const [padRef, padBounds] = useMeasure()
     const [uplRef, uplBounds] = useMeasure()
     const [upvRef, upvBounds] = useMeasure()
     const [favRef, favBounds] = useMeasure()
@@ -13,14 +14,13 @@ export default function Tabs({ activeTab, changeTab, theme }) {
         from: {
             width: uplBounds.width,
             height: uplBounds.height,
-            left: uplBounds.left,
-            top: uplBounds.top
+            left: Math.abs(uplBounds.left - padBounds.width),
         },
         config: config.gentle,
     }), [uplBounds, upvBounds, favBounds])
 
     const changeBlobPos = (bounds) => {
-        set.start({ width: bounds.width, height: bounds.height, left: bounds.left, top: bounds.top })
+        set.start({ width: bounds.width, height: bounds.height, left: Math.abs(bounds.left - padBounds.width) })
     }
 
     useEffect(() => {
@@ -35,7 +35,7 @@ export default function Tabs({ activeTab, changeTab, theme }) {
 
     return (
         <>
-            <animated.ul className={styles.tabbedViewTabs} style={{ backgroundColor: theme.blur_bg }}>
+            <animated.ul reg={padRef} className={styles.tabbedViewTabs} style={{ backgroundColor: theme.blur_bg }}>
                 <li ref={uplRef} onClick={() => changeTab("Uploaded")} className={styles.tabbedViewTab}>
                     Uploaded
                 </li>
