@@ -13,6 +13,9 @@ pillow = "^9.4.0"
 djangorestframework = "^3.14.0"
 djangorestframework-simplejwt = "^5.2.2"
 django-guardian = "^2.4.0"
+django-cors-headers = "^3.14.0"
+drf-nested-forms = "^1.1.7"
+django-imagekit = "^4.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,18 +1,32 @@
+import mimetypes
 from django import http
-from .models import Images
-from .serializers import ImageSerializer
+from .models import Images, ImUserState
+from .serializers import ImageSerializer, AllImageSerializer, ImagePublicSerializer, ImagePrivateSerializer
 from guardian.shortcuts import assign_perm, get_perms
 from django.db.models import Sum
+from django.db.models.functions import Coalesce
 from datetime import timedelta, datetime
-from rest_framework import views, response, status, permissions
+from drf_nested_forms.parsers import NestedMultiPartParser
+from rest_framework import views, response, status, permissions, pagination
+from django.core.exceptions import ValidationError
 
 
-class ListImages(views.APIView):
+class ListImages(views.APIView, pagination.PageNumberPagination):
+    page_size = 20
+    page_size_query_param = "page_size"
+    parser_classes = [NestedMultiPartParser]
 
-    def get_images(self, tagged_only=False):
+    def get_paginated_response(self, data):
+        return response.Response({
+            "next": self.page.next_page_number() if self.page.has_next() else None,
+            "previous": self.page.previous_page_number() if self.page.has_previous() else None,
+            "count": self.page.paginator.count,
+            "data": data
+        })
+
+    def get_images(self):
         try:
-            imgs = Images.objects.all()
-            return imgs.filter(improperties__tagged=True) if tagged_only else imgs
+            return Images.objects.all()
         except Images.DoesNotExist:
             return http.Http404
     
@@ -36,9 +50,10 @@ class ListImages(views.APIView):
                     **etc
             }:
                 imgs = self.get_images()
-                imgs = imgs.order_by("upload_date")
-                serializer = ImageSerializer(imgs, many=True)
-                return response.Response(serializer.data)
+                imgs = imgs.order_by("-upload_date")
+                imgs = self.paginate_queryset(imgs, self.request)
+                serializer = AllImageSerializer(imgs, many=True)
+                return self.get_paginated_response(serializer.data)
             case {
                     "sort": "popular", 
                     "delta": ("day" | "week" | "month" | "year" | "all") as delta,
@@ -46,46 +61,142 @@ class ListImages(views.APIView):
             }:
                 imgs = self.get_images()
                 imgs = self.apply_timedelta(imgs, delta)
-                imgs = imgs.annotate(rating=Sum("userimstat__vote")).order_by("rating")
-                serializer = ImageSerializer(imgs, many=True)
-                return response.Response(serializer.data)
+                imgs = imgs.annotate(rating=Coalesce(Sum("imuserstate__vote"), 0)).order_by("-rating")
+                imgs = self.paginate_queryset(imgs, self.request)
+                serializer = AllImageSerializer(imgs, many=True)
+                return self.get_paginated_response(serializer.data)
             case _:
                 return response.Response(status=status.HTTP_400_BAD_REQUEST)
 
     def post(self, request):
-        serializer = ImageSerializer(data=request.data)
+        serializer = ImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
-            serializer.save()
+            user = request.user
+            serializer.save(uploaded_by=user)
             return response.Response(serializer.data)
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class Image(views.APIView):
-    permission_classes = [permissions.IsAuthenticated,]
-
     def get_image(self, uuid):
         try:
             return Images.objects.get(uuid=uuid)
         except Images.DoesNotExist:
             raise http.Http404
+    
+    def get(self, request, uuid):
+        image = self.get_image(uuid)
+
+        if request.query_params.get("thumbnail"):
+            file = image.thumbnail
+        else:
+            file = image.image
+        
+        size = file.size
+
+        content_type_file = mimetypes.guess_type(file.path)[0]
+
+        response = http.response.FileResponse(open(file.path, "rb"), content_type=content_type_file)
+        response["Content-Disposition"] = f"attachment; filename={file}"
+        response["Content-Length"] = size
+
+        return response
+
+
+class ImageInfo(views.APIView):
+    def get_image(self, uuid):
+        try:
+            return Images.objects.get(uuid=uuid)
+        except Images.DoesNotExist:
+            raise http.Http404
+    
+    def get(self, request, uuid):
+        image = self.get_image(uuid)
+        serializer = ImagePublicSerializer(image, context={"request": request, "image": image})
+        return response.Response(serializer.data)
+    
+    
+class ImagePrivateInfo(views.APIView):
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_private_info(self, image_uuid, user_uuid):
+        return ImUserState.objects.filter(image=image_uuid).get(user=user_uuid)
 
     def get(self, request, uuid):
-        img = self.get_image(uuid)
-        if "image_ownership" in get_perms(request.user, img):
-            serializer = ImageSerializer(img)
-            return response.Response(serializer.data)
-        return response.Response(status=status.HTTP_401_UNAUTHORIZED)
-    
-    def put(self, request, uuid):
-        #TODO TAGME
-        ...
+        try: 
+            state = self.get_private_info(uuid, request.user.id)
+            serializer = ImagePrivateSerializer(state)
+        except ImUserState.DoesNotExist:
+            user = request.user
+            serializer = ImagePrivateSerializer(data={"image": uuid, "user": user.id, "vote": 0})
+            if serializer.is_valid():
+                return response.Response(serializer.data)
+        
+        return response.Response(serializer.data)
     
     def post(self, request, uuid):
-        img = self.get_image(uuid)
         user = request.user
-        assign_perm("image_ownership", user, img) 
-        return response.Response(status=status.HTTP_200_OK)
+        try:
+            imvote = ImUserState.objects.filter(image=uuid).get(user=user.id)
+            serializer = ImagePrivateSerializer(imvote, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except ImUserState.DoesNotExist:
+            serializer = ImagePrivateSerializer(data={**request.data, "user": user.id}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return response.Response(serializer.data)
 
+class UserImages(views.APIView, pagination.PageNumberPagination):
+    permission_classes = [permissions.IsAuthenticated]
+    page_size = 20
+    page_size_query_param = "page_size"
+    parser_classes = [NestedMultiPartParser]
 
-class ImageVoting(views.APIView):
-    ...
+    def get_paginated_response(self, data):
+        return response.Response({
+            "next": self.page.next_page_number() if self.page.has_next() else None,
+            "previous": self.page.previous_page_number() if self.page.has_previous() else None,
+            "count": self.page.paginator.count,
+            "data": data
+        })
+    
+    def get_images(self):
+        try:
+            return Images.objects.all()
+        except Images.DoesNotExist:
+            return http.Http404
+    
+    def get(self, request):
+        match request.query_params:
+            case {
+                    "tab": "uploaded", 
+                    **etc
+            }:
+                user = request.user
+                imgs = self.get_images()
+                imgs = imgs.filter(uploaded_by=user)
+                imgs = imgs.order_by("-upload_date")
+                imgs = self.paginate_queryset(imgs, self.request)
+                serializer = AllImageSerializer(imgs, many=True)
+                return self.get_paginated_response(serializer.data)
+            case {
+                    "tab": "upvoted", 
+                    **etc
+            }:
+                user = request.user
+                imgs = self.get_images()
+                imgs = imgs.filter(imuserstate__vote=1)
+                imgs = imgs.filter(imuserstate__user=user.id)
+                imgs = imgs.distinct()
+                imgs = imgs.order_by("-upload_date")
+                imgs = self.paginate_queryset(imgs, self.request)
+                serializer = AllImageSerializer(imgs, many=True)
+                return self.get_paginated_response(serializer.data)
+            case _:
+                return response.Response(status=status.HTTP_400_BAD_REQUEST)
+        
