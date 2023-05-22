@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const savedMode = localStorage.getItem("mode");
 const prefresDark =
   window.matchMedia &&
   window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -8,12 +7,11 @@ const prefresDark =
 export const themeSlice = createSlice({
   name: "theme",
   initialState: {
-    mode: savedMode ? savedMode : prefresDark ? "dark" : "light",
+    mode: prefresDark ? "dark" : "light",
   },
   reducers: {
     toggle: (state) => {
       state.mode = state.mode === "light" ? "dark" : "light";
-      localStorage.setItem("mode", state.mode);
     },
   },
 });

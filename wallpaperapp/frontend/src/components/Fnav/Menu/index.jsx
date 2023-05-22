@@ -1,15 +1,28 @@
-import { useState, useEffect, useTransition, useCallback } from "react";
-import { useSpring, useChain, useSpringRef, animated, config } from "@react-spring/web"
+import { useState, useEffect } from "react";
+import { useSpring, animated } from "@react-spring/web"
 
 import MenuModal from "./modal";
 import Overlay from "./overlay"
 
 import styles from "../styles.module.css"
+import { clientAxios } from "api/axios";
+import { useQuery } from "@tanstack/react-query";
 
-export default function Menu({theme}) {
+const verifyAuth = async () => {
+    const res = await clientAxios.get("/auth/user/").then(res => res.data)
+    return res
+}
+
+export default function Menu() {
     const [open, setOpen] = useState(false)
     const [domReady, setDomReady] = useState(false)
 
+    const { data } = useQuery({
+        queryKey: ["verifyUser"],
+        queryFn: verifyAuth,
+        cacheTime: 100,
+    })
+    
     useEffect(() => setDomReady(true), [domReady])
 
     const theme_central = useSpring({ from: { x1: 3, x2: 21 }, to: { x1: 12, x2: 12 }, reverse: !open })
@@ -35,8 +48,8 @@ export default function Menu({theme}) {
                 <animated.line x1="3" y1="20" x2="21" y2={theme_lower.y2} />
             </svg>
 
-            {domReady && <MenuModal open={open} theme={theme}/>}
-            {domReady && <Overlay open={open} closeModal={() => setOpen(false)} theme={theme}/>}
+            {domReady && <MenuModal open={open} user={data} />}
+            {domReady && <Overlay open={open} closeModal={() => setOpen(false)} />}
         </>
     )
 }

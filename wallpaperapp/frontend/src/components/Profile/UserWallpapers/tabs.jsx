@@ -1,49 +1,52 @@
-import { useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useSpring, animated, config } from "@react-spring/web"
+import { useDispatch } from "react-redux"
 import useMeasure from "react-use-measure"
 
+import { changeTab } from "redux/userPageTab"
 import styles from "../styles.module.css"
+import { ThemeContext } from "components/Root/themeProvider"
 
-export default function Tabs({ activeTab, changeTab, theme }) {
-    const [padRef, padBounds] = useMeasure()
+export default function Tabs({ activeTab }) {
+    const dispatch = useDispatch()
     const [uplRef, uplBounds] = useMeasure()
     const [upvRef, upvBounds] = useMeasure()
-    const [favRef, favBounds] = useMeasure()
+    const [activeBounds, setActiveBounds] = useState(uplBounds)
+    const {theme} = useContext(ThemeContext)
 
     const [blobProps, set] = useSpring(() => ({
         from: {
             width: uplBounds.width,
             height: uplBounds.height,
-            left: Math.abs(uplBounds.left - padBounds.width),
+            left: uplBounds.left,
         },
         config: config.gentle,
-    }), [uplBounds, upvBounds, favBounds])
-
-    const changeBlobPos = (bounds) => {
-        set.start({ width: bounds.width, height: bounds.height, left: Math.abs(bounds.left - padBounds.width) })
-    }
+    }), [uplBounds, upvBounds])
 
     useEffect(() => {
-        if (activeTab === "Uploaded") {
-            changeBlobPos(uplBounds)
-        } else if (activeTab === "Upvoted") {
-            changeBlobPos(upvBounds)
-        } else if (activeTab === "Favourites") {
-            changeBlobPos(favBounds)
-        }
+        set.start({
+            width: activeBounds.width, 
+            height: activeBounds.height, 
+            left: activeBounds.left
+        })
     })
+    
+    useEffect(() => {
+        if (activeTab === "uploaded") {
+            setActiveBounds(uplBounds)
+        } else if (activeTab === "upvoted") {
+            setActiveBounds(upvBounds)
+        }
+    }, [activeTab, uplBounds, upvBounds])
 
     return (
         <>
-            <animated.ul reg={padRef} className={styles.tabbedViewTabs} style={{ backgroundColor: theme.blur_bg }}>
-                <li ref={uplRef} onClick={() => changeTab("Uploaded")} className={styles.tabbedViewTab}>
+            <animated.ul className={styles.tabbedViewTabs} style={{ backgroundColor: theme.blur_bg }}>
+                <li ref={uplRef} onClick={() => dispatch(changeTab("uploaded"))} className={styles.tabbedViewTab}>
                     Uploaded
                 </li>
-                <li ref={upvRef} onClick={() => changeTab("Upvoted")} className={styles.tabbedViewTab}>
+                <li ref={upvRef} onClick={() => dispatch(changeTab("upvoted"))} className={styles.tabbedViewTab}>
                     Upvoted
-                </li>
-                <li ref={favRef} onClick={() => changeTab("Favourites")} className={styles.tabbedViewTab}>
-                    Favourites
                 </li>
             </animated.ul>
             <animated.div className={styles.tabBlob} style={{ ...blobProps, backgroundColor: theme.backgroundColor }} />

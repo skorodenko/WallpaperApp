@@ -1,8 +1,12 @@
 import { useTransition, animated } from "@react-spring/web"
 
 import styles from "../styles.module.css"
+import { useContext } from "react"
+import { ThemeContext } from "components/Root/themeProvider"
 
-export default function Wrapper({ children, theme, open, refr }) {
+export default function Wrapper({ children, open, refr }) {
+    const {theme} = useContext(ThemeContext)
+
     const transition = useTransition(open ? [open] : [], {
         from: {
             clipPath: 'polygon(0% 0%, 100% 0%, 100% 0%, 0% 0%)',

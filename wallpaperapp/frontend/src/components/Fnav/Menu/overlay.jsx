@@ -1,10 +1,14 @@
-import { useSpring, useChain, useSpringRef, useTransition, animated, config } from "@react-spring/web"
+import { useTransition, animated } from "@react-spring/web"
 import { createPortal } from "react-dom";
 
 import styles from "../styles.module.css"
+import { useContext } from "react";
+import { ThemeContext } from "components/Root/themeProvider";
 
 
-export default function Overlay({ theme, open, closeModal }) {
+export default function Overlay({ open, closeModal }) {
+    const {theme} = useContext(ThemeContext)
+    
     const transition = useTransition(open ? [open] : [], {
         from: { opacity: 0 },
         enter: { opacity: 1 },

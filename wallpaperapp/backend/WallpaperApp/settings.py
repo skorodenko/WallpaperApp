@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 from datetime import timedelta
 
@@ -17,7 +18,8 @@ from datetime import timedelta
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Static media path
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "/media/"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -28,15 +30,16 @@ SECRET_KEY = "django-insecure-@b%1z(a)99*5+l7_rx%4yfpk67_)yhifeh7qzw1(80rnl5ib5(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 INSTALLED_APPS = [
     "main",
     "authentication",
-    "rest_framework",
+    "imagekit",
     "guardian",
+    "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
+    "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,6 +49,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -54,6 +58,15 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_ORIGINS = [
+    "http://192.168.0.147:3000",
+    "http://localhost:3000",
+]
+
+ALLOWED_HOSTS = ["192.168.0.147", "localhost"]
 
 ROOT_URLCONF = "WallpaperApp.urls"
 
@@ -78,15 +91,21 @@ WSGI_APPLICATION = "WallpaperApp.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-#TODO get credentials from envvars
+
+USER = os.environ["USER"]
+PASSWORD = os.environ["PASSWORD"]
+HOST = os.environ["HOST"]
+PORT = os.environ["PORT"]
+DB = os.environ["DB"]
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "wallpaperdb",
-        "USER": "wallpaperapp",
-        "PASSWORD": "wallpaperapp",
-        "HOST": "192.168.0.133",
-        "PORT": "5432",
+        "NAME": DB,
+        "USER": USER,
+        "PASSWORD": PASSWORD,
+        "HOST": HOST,
+        "PORT": PORT,
     }
 }
 
@@ -105,16 +124,16 @@ REST_FRAMEWORK = {
     ],
     
     "DEFAULT_PARSER_CLASSES": [
+        "rest_framework.parsers.FormParser",
         "rest_framework.parsers.JSONParser",
     ],
 }
 
 #JWT settings
 SIMPLE_JWT = {
-    "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.SlidingToken",),
-
-    "SLIDING_TOKEN_LIFETIME": timedelta(minutes=180),
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=7),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": True,
 }
 
 # Password validation

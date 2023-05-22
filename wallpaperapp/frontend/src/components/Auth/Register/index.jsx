@@ -4,13 +4,16 @@ import { toast } from "react-hot-toast";
 
 import styles from "../styles.module.css"
 import { publicAxios } from "api/axios";
+import { useContext } from "react";
+import { ThemeContext } from "components/Root/themeProvider";
 
 
 const REGISTER_URL = "/auth/register/"
 
 
-export default function Register({ theme, to_login }) {
+export default function Register({ to_login }) {
     const { register, handleSubmit } = useForm({ shouldUseNativeValidation: true });
+    const {theme} = useContext(ThemeContext)
 
     const onSubmit = (form) => {
         const promise = publicAxios.post(REGISTER_URL, {

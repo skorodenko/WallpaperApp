@@ -2,8 +2,12 @@ import { animated } from "@react-spring/web"
 import { useDrag } from "@use-gesture/react";
 
 import styles from "../styles.module.css"
+import { useContext } from "react";
+import { ThemeContext } from "components/Root/themeProvider";
 
-export default function ImageCard({ image, theme, setActive, ...props }) {
+export default function ImageCard({ image, close, setActive, ...props }) {
+    const {theme} = useContext(ThemeContext)
+    
     const bind = useDrag(
         ({ tap }) => {
             if (tap) setActive(image)
@@ -15,7 +19,8 @@ export default function ImageCard({ image, theme, setActive, ...props }) {
         <animated.div 
             {...props} 
             {...bind()} 
-            className={styles.image_card} 
+            className={styles.image_card}
+            onClick={close}
             style={
                 {
                     ...theme,

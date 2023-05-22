@@ -1,5 +1,5 @@
 import { animated, useSpringRef, useChain } from "@react-spring/web"
-import { useState } from "react"
+import { useContext, useState } from "react"
 
 import Fnav from "components/Fnav"
 import Wrapper from "./Wrapper"
@@ -7,9 +7,11 @@ import Login from "./Login"
 import Register from "./Register"
 
 import styles from "./styles.module.css"
+import { ThemeContext } from "components/Root/themeProvider"
 
-export default function Auth({ theme }) {
+export default function Auth() {
     const [register, setRegister] = useState(false)
+    const {theme} = useContext(ThemeContext)
 
     const loginRef = useSpringRef()
     const registerRef = useSpringRef()
@@ -20,12 +22,12 @@ export default function Auth({ theme }) {
     return (
         <>
             <animated.div className={styles.masonry} style={theme} />
-            <Fnav theme={theme} />
-            <Wrapper theme={theme} open={!register} refr={loginRef}>
-                <Login theme={theme} to_register={() => setRegister(true)} />
+            <Fnav />
+            <Wrapper open={!register} refr={loginRef}>
+                <Login to_register={() => setRegister(true)} />
             </Wrapper>
-            <Wrapper theme={theme} open={register} refr={registerRef}>
-                <Register theme={theme} to_login={() => setRegister(false)} />
+            <Wrapper open={register} refr={registerRef}>
+                <Register to_login={() => setRegister(false)} />
             </Wrapper>
         </>
     )

@@ -1,15 +1,17 @@
 import { animated } from "@react-spring/web";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useSpring } from "@react-spring/web";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css'
 
 import styles from "./styles.module.css"
+import { ThemeContext } from "components/Root/themeProvider";
 
-export default function ImageInfo({ theme, info, infoPrivate, mutatePrivateInfo }) {
+export default function ImageInfo({ info, infoPrivate, mutatePrivateInfo }) {
     const userVote = infoPrivate?.vote
 
+    const {theme} = useContext(ThemeContext)
     const [animUp, apiUp] = useSpring(() => ({...theme}))
     const [animDown, apiDown] = useSpring(() => ({...theme}))
 
@@ -30,7 +32,6 @@ export default function ImageInfo({ theme, info, infoPrivate, mutatePrivateInfo 
     })
 
     const onClick = (action) => {
-        console.log(userVote)
         if (action === "upvote") {
             mutatePrivateInfo.mutate({image: info.uuid, vote: userVote === 0 || userVote === -1 ? 1 : 0})
         } else if (action === "downvote") {

@@ -1,5 +1,5 @@
 import { animated } from "@react-spring/web";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 
 import Fnav from "components/Fnav"
@@ -9,13 +9,15 @@ import EditImage from "./EditImage";
 import { clientAxios } from "api/axios";
 
 import styles from "./styles.module.css"
+import { ThemeContext } from "components/Root/themeProvider";
 
 const upload_url = "/images/"
 
-export default function WallpaperUploader({ theme }) {
+export default function WallpaperUploader() {
     const [images, setImages] = useState([])
     const [imageURLs, setImageURLs] = useState([])
     const [activeImage, setActiveImage] = useState(null)
+    const {theme} = useContext(ThemeContext)
 
     useEffect(() => {
         if (images.length < 1) return;
@@ -52,6 +54,8 @@ export default function WallpaperUploader({ theme }) {
                 tags: image.tags,
             }).then(() => {
                 return image
+            }).catch(() => {
+                return null
             })
         }))
 
@@ -59,30 +63,31 @@ export default function WallpaperUploader({ theme }) {
     }
 
     const upload = () => {
+        const init_len = imageURLs.length
+        
         const promise = uploadImages()
             .then(uploaded => {
-                removeImages(uploaded)
-                return uploaded.length
-            })
-            .catch(err => {
-                console.log(err)
-                throw err
+                const images = uploaded.filter(img => img)
+                if (init_len !== 0 && images.length === 0) {
+                    throw new Error(`Any image wasn't uploaded`)
+                }
+                removeImages(images)
+                return images.length
             })
         
         toast.promise(promise, {
             loading: "Uploading images ...",
-            success: (quantity) => `Uploaded ${quantity} images`,
+            success: (quantity) => `Uploaded ${init_len}/${quantity} images`,
             error: (err) => `${err.message}`,
         })
     }
 
     return (
         <animated.div className={styles.page} style={theme}>
-            <Fnav theme={theme} />
+            <Fnav />
             <animated.div className={styles.container_grid} style={theme}>
                 <animated.div className={styles.edit_image_container} style={{ ...theme, backgroundColor: theme.blur_bg }}>
                     {activeImage && <EditImage
-                        theme={theme}
                         image={activeImage}
                         removeImage={() => removeImages([activeImage])}
                     />}
@@ -91,7 +96,6 @@ export default function WallpaperUploader({ theme }) {
                     <UploaderImage image={activeImage} />
                 </animated.div>
                 <ListImages
-                    theme={theme}
                     onImageChange={onImageChange}
                     imageList={imageURLs}
                     setActiveImage={setActiveImage}

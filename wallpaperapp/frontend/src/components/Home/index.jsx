@@ -3,19 +3,27 @@ import { animated } from "@react-spring/web"
 import { publicAxios } from "api/axios"
 import Fnav from "components/Fnav"
 import Album from "components/Album"
+import SortOrder from "./sortOrder"
+import { useSelector } from "react-redux"
+import { selectSortOrder } from "redux/sortOrderSlice"
+import { useContext } from "react"
+import { ThemeContext } from "components/Root/themeProvider"
 
 
-const fetchImages = async ({ pageParam }) => {
-    const res = await publicAxios(`/images/`, { params: { page: pageParam, sort: "new", page_size: 50 } }).then(res => res.data)
-    return res
-}
+export default function Home() {
+    const { theme } = useContext(ThemeContext)
+    const sortOrder = useSelector(selectSortOrder)
 
-export default function Home({ theme }) {
+    const fetchImages = async ({ pageParam }) => {
+        const res = await publicAxios(`/images/`, { params: { page: pageParam, page_size: 50, ...sortOrder } }).then(res => res.data)
+        return res
+    }
 
     return (
         <animated.div style={theme}>
-            <Fnav theme={theme} />
-            <Album theme={theme} fetchImages={fetchImages} />
+            <Fnav />
+            <SortOrder sortOrder={sortOrder} />
+            <Album fetchImages={fetchImages} queryKey={"images"} />
         </animated.div>
     )
 }

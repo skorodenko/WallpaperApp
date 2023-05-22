@@ -2,9 +2,12 @@ import { animated } from "@react-spring/web";
 import { TagsInput } from "react-tag-input-component";
 
 import styles from "../styles.module.css"
+import { useContext } from "react";
+import { ThemeContext } from "components/Root/themeProvider";
 
 
-export default function EditImage({ image, theme, removeImage }) {
+export default function EditImage({ image, removeImage }) {
+    const {theme} = useContext(ThemeContext)
 
     const setTags = (tags) => {
         image.tags = tags.map(tag => ({ name: tag }))

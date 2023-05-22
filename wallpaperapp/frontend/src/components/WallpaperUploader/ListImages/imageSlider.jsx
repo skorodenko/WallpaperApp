@@ -16,9 +16,9 @@ export default function ImageSlider({ children }) {
 
     const bind = useGesture(
         {
-            onDrag: ({ event, offset: [ox], active, velocity: [vx] }) => {
+            onDrag: ({ event, movement: [mx], offset: [ox], active, velocity: [vx] }) => {
                 if (active) event.stopPropagation()
-                api.start({ x: -ox, config: springConfig(vx) })
+                api.start({ x: -1.5 * mx - ox, config: springConfig(vx) })
             },
             onWheel: ({ offset: [ox,oy], velocity: [vx,vy] }) => {
                 api.start({ x: oy ? -oy : -ox, config: springConfig(vy) })
@@ -33,6 +33,7 @@ export default function ImageSlider({ children }) {
                         left: -ref.current.scrollWidth + ref.current.offsetWidth,
                         right: 0,
                     }),
+                from: () => [-ref.current.scrollLeft, -ref.current.scrollLeft],
             },
             drag: {
                 axis: "x",

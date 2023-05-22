@@ -1,11 +1,15 @@
 import axios from "axios"
 import { setToken } from "redux/authSlice";
 
-const BASE_URL = "http://192.168.0.147:8000"
+const BASE_URL = "http://localhost:8000"
 
 const REFRESH_URL = "/auth/login/refresh/"
 
 export const publicAxios = axios.create({
+    baseURL: BASE_URL,
+})
+
+const authAxios = axios.create({
     baseURL: BASE_URL,
     withCredentials: true,
 })
@@ -38,7 +42,7 @@ export function setupAxiosInterceptors(store) {
             if (err.response?.status === 401 && !originalConfig._retry) {
                 originalConfig._retry = true;
                 
-                await publicAxios.post(REFRESH_URL).then((response) => {
+                await authAxios.post(REFRESH_URL).then((response) => {
                     store.dispatch(setToken({token: response.data.access}))
                 }).catch((err) => Promise.reject(err))
                 

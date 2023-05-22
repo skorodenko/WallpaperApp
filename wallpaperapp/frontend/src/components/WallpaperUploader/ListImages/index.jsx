@@ -1,19 +1,21 @@
 import { animated, useSpring, config } from "@react-spring/web"
 import { useDrag } from "@use-gesture/react"
 import { createPortal } from "react-dom"
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { AiOutlinePicCenter } from "react-icons/ai"
 
 import ImageSlider from "./imageSlider"
 import ImageCard from "./imageCard"
 import styles from "../styles.module.css"
+import { ThemeContext } from "components/Root/themeProvider"
 
 const height = 435
 const vheight = 35
 
-export default function ListImages({ theme, onImageChange, imageList, setActiveImage, upload }) {
+export default function ListImages({ onImageChange, imageList, setActiveImage, upload }) {
     const [domReady, setDomReady] = useState(false)
     const [isOpen, setOpen] = useState(false)
+    const {theme} = useContext(ThemeContext)
 
     useEffect(() => setDomReady(true), [domReady])
 
@@ -79,8 +81,8 @@ export default function ListImages({ theme, onImageChange, imageList, setActiveI
                         return <ImageCard 
                                     key={i} 
                                     image={img} 
-                                    theme={theme} 
                                     setActive={setActiveImage}
+                                    close={close}
                                 />})}
                 </ImageSlider>
             </animated.div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import {useSpring, animated} from "@react-spring/web"
 
 import ThemeToggle from "./ThemeToggle";
@@ -6,10 +6,11 @@ import Title from "./Title";
 import Menu from "./Menu";
 
 import styles from "./styles.module.css"
+import { ThemeContext } from "components/Root/themeProvider";
 
-export default function Fnav({theme}) {
+export default function Fnav() {
     const [atTop, setAtTop] = useState(window.scrollY >= 20)
-    
+    const { theme } = useContext(ThemeContext)
     const [float_props, fnav] = useSpring(() => ({maxWidth:"100%", borderRadius:"0px", marginTop:"0px"}))
 
     function handleScrollTop() {
@@ -29,7 +30,7 @@ export default function Fnav({theme}) {
     return (
         <animated.div className={styles.header}>
             <animated.div className={styles.fnav_container} style={{...float_props, ...theme, backgroundColor: theme.blur_bg}}>
-                <Menu theme={theme}/>
+                <Menu />
                 <span className={styles.spacer}/>
                 <Title/>
                 <span className={styles.spacer}/>

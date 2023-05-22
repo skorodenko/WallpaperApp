@@ -2,11 +2,11 @@ import { Suspense } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import styles from "./styles.module.css"
-import { clientAxios } from "api/axios";
+import { publicAxios } from "api/axios";
 import { AiOutlineLoading } from "react-icons/ai";
 
 const fetchImage = async (uuid) => {
-    const res = await clientAxios(`/image/${uuid}/`, { responseType: "blob" }).then(res => res.data)
+    const res = await publicAxios(`/image/${uuid}/`, { responseType: "blob" }).then(res => res.data)
     return URL.createObjectURL(res)
 }
 

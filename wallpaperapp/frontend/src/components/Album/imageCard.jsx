@@ -7,16 +7,17 @@ import styles from "./styles.module.css"
 import { publicAxios } from "api/axios";
 import { AiOutlineLoading } from "react-icons/ai";
 
-const fetchImage = async (uuid) => {
-    const res = await publicAxios(`/image/${uuid}/`, { responseType: "blob", params: { "thumbnail": true } }).then(res => res.data)
+const fetchImage = async (uuid, signal) => {
+    const res = await publicAxios(`/image/${uuid}/`, { responseType: "blob", params: { "thumbnail": true }, signal }).then(res => res.data)
     return URL.createObjectURL(res)
 }
 
 function Image({ image, ...props }) {
     const { data } = useQuery({
         queryKey: ["imageThumbnail", image.uuid],
-        queryFn: () => fetchImage(image.uuid),
+        queryFn: ({ signal }) => fetchImage(image.uuid, signal),
         suspense: true,
+        refetchOnWindowFocus: false,
     })
 
     return <img alt={image.uuid} load="lazy" src={data} {...props} />

@@ -8,14 +8,17 @@ import { setToken } from "redux/authSlice";
 import styles from "../styles.module.css"
 import {clientAxios} from "api/axios";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ThemeContext } from "components/Root/themeProvider";
 
 
 const LOGIN_URL = "/auth/login/"
 
-export default function Login({ theme, to_register }) {
+export default function Login({ to_register }) {
     const dispatch = useDispatch()
     const { register, handleSubmit } = useForm({shouldUseNativeValidation: true});
     const navigate = useNavigate()
+    const {theme} = useContext(ThemeContext)
 
     const onSubmit = (data) => {
         const promise = clientAxios.post(LOGIN_URL, {

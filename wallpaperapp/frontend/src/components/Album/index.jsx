@@ -1,58 +1,26 @@
-import { Suspense, useImperativeHandle, useRef, useState } from "react"
+import { Suspense, useContext, useRef, useState } from "react"
 import { animated, useTransition } from "@react-spring/web"
 import { useGesture } from "@use-gesture/react"
 import { useSpring } from "@react-spring/web"
-import { useQueryClient, useInfiniteQuery } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import { AiOutlineLoading } from "react-icons/ai"
 
 import styles from "./styles.module.css"
-import ImageCard from "./imageCard"
 import { AiOutlineUp } from "react-icons/ai"
+import AlbumPage from "./albumPage"
+import { ThemeContext } from "components/Root/themeProvider"
 
 
-function AlbumPage({ fetchImages, albumPageRef }) {
-    const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery({
-        queryKey: ["images"],
-        queryFn: fetchImages,
-        getNextPageParam: (lastPage, allPages) => lastPage?.next,
-        suspense: true,
-        cacheTime: 100,
-        keepPreviousData: true,
-        refetchOnMount: "always",
-    })
 
-    useImperativeHandle(albumPageRef, () => ({
-        fetchNext() {
-            if (hasNextPage && !isFetchingNextPage) {
-                fetchNextPage({
-                    cancelRefetch: true,
-                })
-            }
-        }
-    }))
-
-    return (
-        data?.pages.map((group, i) => (
-            <>
-                <div key={i} className={styles.image_grid}>
-                    {group.data.map((image) => (
-                        <ImageCard key={image.uuid} image={image} />
-                    ))}
-                </div>
-                <div className={styles.page_separator}><div className={styles.separator}> <h2> Page {i+1} </h2> </div></div>
-            </>
-        ))
-    )
-}
-
-
-export default function Album({ fetchImages, theme }) {
+export default function Album({ fetchImages, queryKey }) {
     const ref = useRef()
+    const {theme} = useContext(ThemeContext)
     const qclient = useQueryClient()
     const albumPageRef = useRef()
     const [showUpButton, setShowUpButton] = useState(false)
+    const [restoredScroll, setRestoredScroll] = useState(false) // TODO Maybe can be rewroked
 
-    const [{ y }, api] = useSpring(() => ({
+    const [, api] = useSpring(() => ({
         y: 0,
         onChange: (props) => {
             window.scroll(0, props.value.y)
@@ -86,17 +54,23 @@ export default function Album({ fetchImages, theme }) {
 
     const bind = useGesture(
         {
-            onDrag: ({ event, active, offset: [, oy], movement: [, my], overflow: [, ovy] }) => {
+            onDrag: ({ first, event, active, offset: [, oy], movement: [, my], overflow: [, ovy] }) => {
                 if (active) event.stopPropagation()
 
-                if (ovy === -1) {
+                if (!restoredScroll && first) {
+                    setRestoredScroll(true)
+                    api.start({ y: - 1.5 * my - oy, immediate: true })
+                } else if (ovy === -1) {
                     albumPageRef.current.fetchNext()
                 } else {
                     api.start({ y: - 1.5 * my - oy })
                 }
             },
-            onWheel: ({ offset: [, oy], overflow: [, ovy] }) => {
-                if (ovy === 1) {
+            onWheel: ({ first, offset: [, oy], overflow: [, ovy] }) => {
+                if (!restoredScroll && first) {
+                    setRestoredScroll(true)
+                    api.start({ y: oy, immediate: true })
+                } else if (ovy === 1) {
                     albumPageRef.current.fetchNext()
                 } else {
                     api.start({ y: oy })
@@ -134,7 +108,11 @@ export default function Album({ fetchImages, theme }) {
                         <AiOutlineLoading className={styles.spinner} />
                     </animated.div>
                 }>
-                    <AlbumPage fetchImages={fetchImages} albumPageRef={albumPageRef} />
+                    <AlbumPage 
+                        fetchImages={fetchImages} 
+                        albumPageRef={albumPageRef} 
+                        queryKey={queryKey}
+                    />
                 </Suspense>
             </div>
             {transition((style, item) => (
