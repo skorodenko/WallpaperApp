@@ -1,3 +1,15 @@
+# Wallpaper App
+
+This is an app to host wallpapers. Designed to work well on both desktop and mobile.
+
+App capabilities:
+
+- Create user account
+- Upload wallpapers by users (Add tags to images during upload)
+- View (and download) uploaded wallpapers
+- Upvote/Dornvote wallpapers on the website
+- Sort by date/upvote count
+
 Як запустити:
 docker compose up
 
