@@ -12,6 +12,11 @@ This is an app to host wallpapers. Designed to work well on both desktop and mob
 - Upvote/Dornvote wallpapers on the website
 - Sort by date/upvote count
 
+## Techonlogical stack:
+- Django + DRF + JWT token auth
+- React
+- Docker
+
 ## How to run:
 Start using docker compose
 ```
