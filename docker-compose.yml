@@ -1,35 +1,10 @@
+include:
+  - ./wallpaperapp/backend/docker-compose.yml
+
 services:
-  backend:
-    build: ./wallpaperapp/backend
-    ports:
-      - 8000:8000
-    deploy:
-      mode: global
-    depends_on:
-      db:
-        condition: service_healthy
   frontend:
     build: ./wallpaperapp/frontend
     ports:
       - 3000:3000
     deploy:
       mode: global
-    depends_on:
-      backend:
-        condition: service_started
-  db:
-    image: postgres
-    restart: always
-    deploy:
-      mode: global
-    environment:
-      POSTGRES_USER: skorodenko
-      POSTGRES_PASSWORD: 1234321
-      POSTGRES_DB: main
-    ports:
-      - 5432:5432
-    healthcheck:
-        test: ["CMD", "pg_isready", "-d", "main", "-p", "5432", "-U", "skorodenko"]
-        interval: 4s
-        timeout: 4s
-        retries: 5
