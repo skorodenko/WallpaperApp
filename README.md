@@ -22,6 +22,10 @@ This is an app to host wallpapers. Designed to work well on both desktop and mob
 - React
 - Docker (+ Nginx)
 
+## Project structure mockup
+
+![](https://github.com/skorodenko/WallpaperApp/blob/master/arch_mockup.png)
+
 ## Todo:
 
 - Add tag search
