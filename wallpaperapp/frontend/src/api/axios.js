@@ -1,7 +1,7 @@
 import axios from "axios"
 import { setToken } from "redux/authSlice";
 
-const BASE_URL = "http://localhost:8000"
+const BASE_URL = "http://localhost:8080"
 
 const REFRESH_URL = "/auth/login/refresh/"
 

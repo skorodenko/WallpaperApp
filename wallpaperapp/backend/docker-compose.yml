@@ -1,0 +1,119 @@
+services:
+  ngnix:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - 8080:80
+    depends_on:
+      - authentication
+      - wallpapers
+
+  minio:
+    image: quay.io/minio/minio
+    command: server /data --console-address ":9001"
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ACCESS_KEY: minio
+      MINIO_SECRET_KEY: minio123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  createbuckets:
+    image: quay.io/minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minio minio123;
+      /usr/bin/mc mb myminio/wallpapers;
+      /usr/bin/mc anonymous set public myminio/wallpapers;
+      exit 0;
+      "
+
+  redis:
+    image: redis:alpine
+
+  rabbitmq:
+    image: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+  
+  authentication:
+    build: ./authentication
+    command: /service/start.sh
+    depends_on:
+      authentication_db:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: authentication_db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: 1234321
+      POSTGRES_DB: authentication
+
+  authentication-worker:
+    build: ./authentication
+    command: /service/start_worker.sh
+    depends_on:
+      authentication_db:
+        condition: service_healthy
+      authentication:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+    environment:
+      POSTGRES_HOST: authentication_db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: 1234321
+      POSTGRES_DB: authentication
+
+  authentication_db:
+    image: postgres
+    environment:
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: 1234321
+      POSTGRES_DB: authentication
+    healthcheck:
+        test: ["CMD", "pg_isready", "-d", "authentication", "-p", "5432", "-U", "main"]
+        interval: 4s
+        timeout: 4s
+        retries: 5
+
+  wallpapers:
+    build: ./wallpapers
+    command: /service/start.sh
+    depends_on:
+      wallpapers_db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      minio:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: wallpapers_db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: 1234321
+      POSTGRES_DB: wallpapers
+  
+  wallpapers_db:
+    image: postgres
+    environment:
+      POSTGRES_USER: main
+      POSTGRES_PASSWORD: 1234321
+      POSTGRES_DB: wallpapers
+    ports:
+      - 5432:5432
+    healthcheck:
+        test: ["CMD", "pg_isready", "-d", "wallpapers", "-p", "5432", "-U", "main"]
+        interval: 4s
+        timeout: 4s
+        retries: 5
