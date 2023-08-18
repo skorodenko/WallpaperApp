@@ -1,4 +1,4 @@
-# Wallpaper App
+# Wallpaper App [Work in progress]
 
 ![](https://github.com/skorodenko/WallpaperApp/blob/master/preview.GIF)
 
@@ -14,8 +14,21 @@ This is an app to host wallpapers. Designed to work well on both desktop and mob
 
 ## Techonlogical stack:
 - Django + DRF + JWT token auth
+- Celery
+  - Broker: RabbitMQ
+  - Backend: Redis
+- Minio (S3 compatible storage api)
+- PostgreSQL
 - React
-- Docker
+- Docker (+ Nginx)
+
+## Todo:
+
+- Add tag search
+- Add ML-based system to infer tags from image
+- Add sphinx generated documentation (and comments in code) 
+- Add monetiztion (possibly some crypto miner)
+- Improve stability and performance
 
 ## How to run:
 Start using docker compose
@@ -30,12 +43,7 @@ docker compose up
 4. Click upload button
 5. Click on circkle button
 6. Add wallpapers
-7. __Optional__ add tags
+7. __Optional__: add tags
 8. Click on upload staged to upload wallpapers
 9. Go to homepage to view wallpapers
-
-## Todo:
-
-- Add tag search
-- Add monetiztion (possibly some crypto miner)
-- Improve stability and performance
+   
