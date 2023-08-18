@@ -13,14 +13,14 @@ const fetchImage = async (uuid, signal) => {
 }
 
 function Image({ image, ...props }) {
-    const { data } = useQuery({
-        queryKey: ["imageThumbnail", image.uuid],
-        queryFn: ({ signal }) => fetchImage(image.uuid, signal),
-        suspense: true,
-        refetchOnWindowFocus: false,
-    })
+    //const { data } = useQuery({
+    //    queryKey: ["imageThumbnail", image.uuid],
+    //    queryFn: ({ signal }) => fetchImage(image.uuid, signal),
+    //    suspense: true,
+    //    refetchOnWindowFocus: false,
+    //})
 
-    return <img alt={image.uuid} load="lazy" src={data} {...props} />
+    return <img alt={image.uuid} load="lazy" src={image.image} {...props} />
 }
 
 export default function ImageCard({ image, onClick, ...props }) {
