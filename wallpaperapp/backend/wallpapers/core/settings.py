@@ -45,8 +45,19 @@ REST_FRAMEWORK = {
     ],
 }
 
+#MINIO (S3) settings
+AWS_ACCESS_KEY_ID = "minio"
+AWS_SECRET_ACCESS_KEY = "minio123"
+AWS_STORAGE_BUCKET_NAME = "wallpapers"
+AWS_S3_ENDPOINT_URL = "http://minio:9000/"
+AWS_S3_CUSTOM_DOMAIN = f'localhost:8080/{AWS_STORAGE_BUCKET_NAME}'
+AWS_S3_ENDPOINT = "minio:9000"
+AWS_S3_URL_PROTOCOL = "http:"
+AWS_S3_USE_SSL = False
+
 # Celery backend
-CELERY_RESULT_BACKEND = 'django-db'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
 CELERY_CACHE_BACKEND = 'default'
 
 #Cache settings

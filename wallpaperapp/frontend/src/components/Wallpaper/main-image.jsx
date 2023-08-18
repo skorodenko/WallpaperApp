@@ -6,8 +6,8 @@ import { publicAxios } from "api/axios";
 import { AiOutlineLoading } from "react-icons/ai";
 
 const fetchImage = async (uuid) => {
-    const res = await publicAxios(`/image/${uuid}/`, { responseType: "blob" }).then(res => res.data)
-    return URL.createObjectURL(res)
+    const res = await publicAxios(`/image/${uuid}/`).then(res => res.data)
+    return res
 }
 
 function Image({ image_uuid, ...props }) {
@@ -17,7 +17,7 @@ function Image({ image_uuid, ...props }) {
         suspense: true,
     })
 
-    return <img alt={image_uuid} src={data} {...props} />
+    return <img alt={image_uuid} src={data.image} {...props} />
 }
 
 export default function MainImage({ image_uuid }) {

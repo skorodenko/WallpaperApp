@@ -32,7 +32,6 @@ class ImageSerializer(serializers.ModelSerializer):
     
 class ImagePublicSerializer(serializers.ModelSerializer):
     tags = ImTagsSerializer(many=True, required=False)
-    uploaded_by = serializers.SlugRelatedField(read_only=True, slug_field="username")
     upvotes = serializers.SerializerMethodField()
     downvotes = serializers.SerializerMethodField()
    

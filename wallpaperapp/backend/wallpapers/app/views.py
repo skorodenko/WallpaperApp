@@ -70,7 +70,7 @@ class ListImages(views.APIView, pagination.PageNumberPagination):
         serializer = ImageSerializer(data=request.data, partial=True)
         if serializer.is_valid():
             user = request.user
-            serializer.save(uploaded_by=user)
+            serializer.save(uploaded_by=user.id)
             return response.Response(serializer.data)
         return response.Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -85,20 +85,9 @@ class Image(views.APIView):
     def get(self, request, uuid):
         image = self.get_image(uuid)
 
-        if request.query_params.get("thumbnail"):
-            file = image.thumbnail
-        else:
-            file = image.image
+        serializer = ImageSerializer(image)
         
-        size = file.size
-
-        content_type_file = mimetypes.guess_type(file.path)[0]
-
-        response = http.response.FileResponse(open(file.path, "rb"), content_type=content_type_file)
-        response["Content-Disposition"] = f"attachment; filename={file}"
-        response["Content-Length"] = size
-
-        return response
+        return response.Response(serializer.data)
 
 
 class ImageInfo(views.APIView):
@@ -177,7 +166,7 @@ class UserImages(views.APIView, pagination.PageNumberPagination):
             }:
                 user = request.user
                 imgs = self.get_images()
-                imgs = imgs.filter(uploaded_by=user)
+                imgs = imgs.filter(uploaded_by=user.id)
                 imgs = imgs.order_by("-upload_date")
                 imgs = self.paginate_queryset(imgs, self.request)
                 serializer = AllImageSerializer(imgs, many=True)

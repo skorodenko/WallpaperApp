@@ -17,5 +17,5 @@ class MicroJWTAuth(JWTAuthentication):
     
     def get_user(self, validated_token):
         t = app.send_task("authenticate", (validated_token,))
-        user_dict = t.get()
+        user_dict = t.get(timeout=5)
         return UserData(user_dict)

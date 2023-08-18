@@ -5,6 +5,7 @@ from PIL import Image
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from core.storage import MinioWallpaperStorage
 
 
 def hash_upload(instance, filename):
@@ -24,7 +25,7 @@ class Images(models.Model):
         - stat: user related statistics for image 
     """
     uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    image = models.ImageField(upload_to=hash_upload)
+    image = models.ImageField(upload_to=hash_upload, storage=MinioWallpaperStorage())
     thumbnail = ImageSpecField(source="image", processors=[ResizeToFill(300, 300)], format="PNG",
                                       options={"quality": 60})
     upload_date = models.DateField(auto_now_add=True)

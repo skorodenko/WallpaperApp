@@ -23,4 +23,3 @@ WORKDIR /service
 
 COPY . .
 RUN chmod +x ./start.sh
-RUN chmod +x ./start_worker.sh

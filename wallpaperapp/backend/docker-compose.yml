@@ -24,6 +24,18 @@ services:
       timeout: 20s
       retries: 3
 
+  createbuckets:
+    image: quay.io/minio/mc
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://minio:9000 minio minio123;
+      /usr/bin/mc mb myminio/wallpapers;
+      /usr/bin/mc anonymous set public myminio/wallpapers;
+      exit 0;
+      "
+
   redis:
     image: redis:alpine
 
@@ -54,6 +66,8 @@ services:
         condition: service_healthy
       authentication:
         condition: service_started
+      rabbitmq:
+        condition: service_started
     environment:
       POSTGRES_HOST: authentication_db
       POSTGRES_PORT: 5432
@@ -79,6 +93,10 @@ services:
     depends_on:
       wallpapers_db:
         condition: service_healthy
+      rabbitmq:
+        condition: service_started
+      minio:
+        condition: service_healthy
     environment:
       POSTGRES_HOST: wallpapers_db
       POSTGRES_PORT: 5432
@@ -92,6 +110,8 @@ services:
       POSTGRES_USER: main
       POSTGRES_PASSWORD: 1234321
       POSTGRES_DB: wallpapers
+    ports:
+      - 5432:5432
     healthcheck:
         test: ["CMD", "pg_isready", "-d", "wallpapers", "-p", "5432", "-U", "main"]
         interval: 4s

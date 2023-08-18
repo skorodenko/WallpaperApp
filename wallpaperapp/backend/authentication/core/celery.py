@@ -3,7 +3,7 @@ from celery import Celery
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
 
-app = Celery("authentication", broker="amqp://guest:guest@rabbitmq:5672")
+app = Celery("authentication")
 app.config_from_object("django.conf:settings", namespace="CELERY")
 
 app.autodiscover_tasks()
