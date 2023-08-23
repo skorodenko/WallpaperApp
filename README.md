@@ -28,6 +28,7 @@ This is an app to host wallpapers. Designed to work well on both desktop and mob
 
 ## Todo:
 
+- Code refactoring + docs + tests
 - Add tag search
 - Add ML-based system to infer tags from image
 - Add sphinx generated documentation (and comments in code) 
@@ -39,6 +40,7 @@ Start using docker compose
 ```
 docker compose up
 ```
+Web app will be hosted on localhost:3000
 
 ## Test usecase:
 1. Register account
